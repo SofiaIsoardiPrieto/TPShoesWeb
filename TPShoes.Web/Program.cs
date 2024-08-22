@@ -1,3 +1,6 @@
+using TPShoes.Datos;
+using TPShoes.IoC;
+
 namespace TPShoes.Web
 {
     public class Program
@@ -8,7 +11,7 @@ namespace TPShoes.Web
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+            DI.ConfigurarServicios(builder.Services);
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

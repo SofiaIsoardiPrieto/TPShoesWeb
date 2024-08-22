@@ -6,4 +6,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TPShoes.Datos\TPShoes.Datos.csproj" />
+    <ProjectReference Include="..\TPShoes.Entidades\TPShoes.Entidades.csproj" />
+    <ProjectReference Include="..\TPShoes.Herramientas\TPShoes.Herramientas.csproj" />
+    <ProjectReference Include="..\TPShoes.IoC\TPShoes.IoC.csproj" />
+    <ProjectReference Include="..\TPShoes.Servicios\TPShoes.Servicios.csproj" />
+  </ItemGroup>
+
 </Project>

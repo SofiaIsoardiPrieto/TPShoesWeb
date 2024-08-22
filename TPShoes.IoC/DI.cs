@@ -10,10 +10,9 @@ namespace TPShoes.IoC
 {
     public static class DI
     {
-        public static IServiceProvider ConfigurarServicios()
+        public static void ConfigurarServicios(IServiceCollection servicios)
         {
-            var servicios = new ServiceCollection();
-
+         
             //todos los repositorios
             servicios.AddScoped<IRepositorioBrands,
                 RepositorioBrands>();
@@ -55,7 +54,7 @@ namespace TPShoes.IoC
                     Trusted_Connection=true; TrustServerCertificate=True;");
             });
 
-            return servicios.BuildServiceProvider();
+            
         }
 
     }
