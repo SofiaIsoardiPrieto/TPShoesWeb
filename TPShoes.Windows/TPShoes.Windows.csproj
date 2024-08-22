@@ -1,0 +1,74 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TPShoes.Entidades\TPShoes.Entidades.csproj" />
+    <ProjectReference Include="..\TPShoes.IoC\TPShoes.IoC.csproj" />
+    <ProjectReference Include="..\TPShoes.Servicios\TPShoes.Servicios.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="FrmSizeCombo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FrmBrandAE.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FrmSportAE.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FrmSports.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FrmColourAE.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FrmGenreAE.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FrmColours.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FrmGenres.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FrmBrands.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FrmRangoPrecioFiltro.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FrmStock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FrmColourFiltro.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FrmBrandFiltro.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FrmSizeShoes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
