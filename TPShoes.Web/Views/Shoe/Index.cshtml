@@ -4,3 +4,31 @@
 }
 <h1>Lista de Shoes</h1>
 
+<table class="table table-bordered table-hover">
+	<thead>
+		<tr>
+			<th>Shoes</th>
+		</tr>
+	</thead>
+	<tbody>
+		@if	(Model.Any())
+		{
+			foreach (var item in Model)
+			{
+				<tr>
+					<td>@item.Model</td>
+					<td>@item.Price</td>
+				</tr>
+				
+					
+				
+				
+			}
+		}else
+		{
+			<tr>
+				<td>Error con el model</td>
+			</tr>
+		}
+	</tbody>
+</table>
