@@ -1,11 +1,11 @@
 ﻿using TPShoes.Datos;
 using TPShoes.Datos.Interfaces;
-using TPShoes.Entidades;
+using TPShoes.Entidades.Clases;
 using TPShoes.Servicios.Interfaces;
 
 namespace TPShoes.Servicios.Servicios
 {
-    public class BrandsServicio : IBrandsServicio
+	public class BrandsServicio : IBrandsServicio
     {
         private readonly IRepositorioBrands _repository;
         private readonly IUnitOfWork _unitOfWork;

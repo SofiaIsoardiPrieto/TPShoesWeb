@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TPShoes.Datos.Interfaces;
-using TPShoes.Entidades;
+using TPShoes.Entidades.Clases;
 
 namespace TPShoes.Datos.Repositorios
 {
-    public class RepositorioBrands : IRepositorioBrands
+	public class RepositorioBrands : IRepositorioBrands
     {
 
         private readonly DBContextShoes _context;

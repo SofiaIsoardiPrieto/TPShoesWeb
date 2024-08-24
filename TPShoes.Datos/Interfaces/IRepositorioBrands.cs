@@ -1,8 +1,8 @@
-﻿using TPShoes.Entidades;
+﻿using TPShoes.Entidades.Clases;
 
 namespace TPShoes.Datos.Interfaces
 {
-    public interface IRepositorioBrands
+	public interface IRepositorioBrands
     {
         void Agregar(Brand brand);
         void Borrar(Brand brand);

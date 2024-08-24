@@ -1,13 +1,12 @@
 ﻿using System.Linq.Expressions;
 using System.Numerics;
-using TPShoes.Entidades;
 using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.Dtos;
 using TPShoes.Entidades.Enum;
 
 namespace TPShoes.Servicios.Interfaces
 {
-    public interface IShoesServicio
+	public interface IShoesServicio
     {
         void Guardar(Shoe shoe);
         void Editar(Shoe shoe, int? sizeId = null);

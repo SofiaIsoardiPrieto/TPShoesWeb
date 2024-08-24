@@ -1,14 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using TPShoes.Datos.Interfaces;
-using TPShoes.Entidades;
 using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.Dtos;
 using TPShoes.Entidades.Enum;
 
 namespace TPShoes.Datos.Repositorios
 {
-    public class RepositorioShoes : IRepositorioShoes
+	public class RepositorioShoes : IRepositorioShoes
     {
         private readonly DBContextShoes _context;
 

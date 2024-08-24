@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TPShoes.Datos\TPShoes.Datos.csproj" />
     <ProjectReference Include="..\TPShoes.Entidades\TPShoes.Entidades.csproj" />
     <ProjectReference Include="..\TPShoes.Herramientas\TPShoes.Herramientas.csproj" />

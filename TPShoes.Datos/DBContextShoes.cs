@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TPShoes.Entidades;
 using TPShoes.Entidades.Clases;
 
 namespace TPShoes.Datos
 {
-    public class DBContextShoes : DbContext
+	public class DBContextShoes : DbContext
     {
         public DBContextShoes() { }
         public DBContextShoes(DbContextOptions<DBContextShoes> options) : base(options) { }

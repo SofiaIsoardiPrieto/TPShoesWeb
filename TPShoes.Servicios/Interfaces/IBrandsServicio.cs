@@ -1,8 +1,8 @@
-﻿using TPShoes.Entidades;
+﻿using TPShoes.Entidades.Clases;
 
 namespace TPShoes.Servicios.Interfaces
 {
-    public interface IBrandsServicio
+	public interface IBrandsServicio
     {
         void Borrar(Brand brand);
         bool EstaRelacionado(Brand brand);

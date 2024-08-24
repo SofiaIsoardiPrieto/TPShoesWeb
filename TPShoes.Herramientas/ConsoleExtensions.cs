@@ -1,10 +1,9 @@
 ﻿using ConsoleTables;
-using TPShoes.Entidades;
 using TPShoes.Entidades.Clases;
 
 namespace TPShoes.Herramientas
 {
-    public static class ConsoleExtensions
+	public static class ConsoleExtensions
     {
         public static string ReadString(string message)
         {

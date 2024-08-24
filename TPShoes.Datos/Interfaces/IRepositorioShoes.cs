@@ -1,12 +1,11 @@
 ﻿using System.Linq.Expressions;
-using TPShoes.Entidades;
 using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.Dtos;
 using TPShoes.Entidades.Enum;
 
 namespace TPShoes.Datos.Interfaces
 {
-    public interface IRepositorioShoes
+	public interface IRepositorioShoes
     {
         bool Existe(Shoe shoe);
        int GetCantidad(Expression<Func<Shoe, bool>>? filtro = null);

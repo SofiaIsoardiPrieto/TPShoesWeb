@@ -1,6 +1,6 @@
 ﻿namespace TPShoes.Entidades.Clases
 {
-    public class Shoe : ICloneable
+	public class Shoe : ICloneable
     {
         public int ShoeId { get; set; }
         public int BrandId { get; set; }

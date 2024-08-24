@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 using TPShoes.Datos;
 using TPShoes.Datos.Interfaces;
-using TPShoes.Entidades;
 using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.Dtos;
 using TPShoes.Entidades.Enum;
@@ -9,7 +8,7 @@ using TPShoes.Servicios.Interfaces;
 
 namespace TPShoes.Servicios.Servicios
 {
-    public class ShoesServicio : IShoesServicio
+	public class ShoesServicio : IShoesServicio
     {
         private readonly IRepositorioShoes _repository;
         private readonly IUnitOfWork _unitOfWork;
