@@ -5,12 +5,11 @@ using Size = TPShoes.Entidades.Clases.Size;
 
 namespace TPShoes.Datos.Interfaces
 {
-    public interface IRepositorioSizes
-    {
+    public interface IRepositorioSizes : IRepositorioGenerico<Size>
+	{
 
-        void Agregar(Size size);
+     
         void AgregarSizeShoe(SizeShoe sizeShoe);
-        void Borrar(Size size);
         void Editar(Size size);
         bool Existe(SizeShoe sizeShoe);
         void Borrar(SizeShoe sizeShoe);
@@ -26,8 +25,6 @@ namespace TPShoes.Datos.Interfaces
         int GetCantidad();
         List<SizeShoeDto>? GetSizeShoeDtoPorId(int shoeId);
         SizeShoe? GetSizeShoePorId(int sizeShoeId);
-        Size? GetSizePorId(int sizeId);
-        List<Size> GetLista();
         List<Size>? GetSizesNoAsociadosPorShoeId(int shoeId);
     }
 }

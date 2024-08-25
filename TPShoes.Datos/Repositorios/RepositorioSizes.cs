@@ -6,29 +6,29 @@ using TPShoes.Entidades.Enum;
 
 namespace TPShoes.Datos.Repositorios
 {
-    public class RepositorioSizes : IRepositorioSizes
+    public class RepositorioSizes : RepositorioGenerico<Size>, IRepositorioSizes
     {
-        private readonly DBContextShoes _context;
+        private readonly DBContextShoes _db;
 
-        public RepositorioSizes(DBContextShoes context)
-        {
-            _context = context;
-        }
+        public RepositorioSizes(DBContextShoes db) : base(db)
+		{
+            _db = db ?? throw new ArgumentNullException(nameof(db));
+		}
         public void Agregar(Entidades.Clases.Size sizes)
         {
 
-            _context.Add(sizes);
+            _db.Add(sizes);
         }
 
         public void AgregarSizeShoe(SizeShoe nuevaRelacion)
         {
-            _context.Set<SizeShoe>().Add(nuevaRelacion);
+            _db.Set<SizeShoe>().Add(nuevaRelacion);
         }
 
 
         public void Borrar(Entidades.Clases.Size sizes)
         {
-            _context.Remove(sizes);
+            _db.Remove(sizes);
         }
 
         public void Borrar(SizeShoe sizeShoe)
@@ -38,7 +38,7 @@ namespace TPShoes.Datos.Repositorios
 
         public void Editar(Entidades.Clases.Size sizes)
         {
-            _context.Update(sizes);
+            _db.Update(sizes);
         }
 
         public void Editar(SizeShoe sizeShoe)
@@ -48,7 +48,7 @@ namespace TPShoes.Datos.Repositorios
 
         public bool EstaRelacionado(Entidades.Clases.Size sizes)
         {
-            return _context.Sizes.Any(ss => ss.SizeId == sizes.SizeId);
+            return _db.Sizes.Any(ss => ss.SizeId == sizes.SizeId);
         }
 
         public bool EstaRelacionado(SizeShoe size)
@@ -58,7 +58,7 @@ namespace TPShoes.Datos.Repositorios
 
         public bool Existe(Entidades.Clases.Size sizes)
         {
-            return _context.Sizes.
+            return _db.Sizes.
                  Any(s => s.SizeId == sizes.SizeNumber
                  && s.SizeId != sizes.SizeId);
         }
@@ -70,7 +70,7 @@ namespace TPShoes.Datos.Repositorios
 
         public int GetCantidad()
         {
-            return _context.Sizes.Count();
+            return _db.Sizes.Count();
         }
 
         public List<Size> GetLista()
@@ -78,7 +78,7 @@ namespace TPShoes.Datos.Repositorios
             try
             {
                 // Utilizando Entity Framework para obtener todos los registros de la tabla Sizes
-                return _context.Sizes.AsNoTracking().ToList();
+                return _db.Sizes.AsNoTracking().ToList();
             }
             catch (Exception ex)
             {
@@ -92,7 +92,7 @@ namespace TPShoes.Datos.Repositorios
             try
             {
                 // Utilizando Entity Framework para buscar el Size por su ID
-                var size = _context.Sizes
+                var size = _db.Sizes
                     .FirstOrDefault(s => s.SizeId == sizeId);
 
                 return size;
@@ -116,13 +116,13 @@ namespace TPShoes.Datos.Repositorios
 
         public List<Size>? GetSizesNoAsociadosPorShoeId(int shoeId)
         {
-            var sizeIdsAsociados = _context.SizeShoes
+            var sizeIdsAsociados = _db.SizeShoes
             .Where(ss => ss.ShoeId == shoeId)
             .Select(ss => ss.SizeId)
             .ToList();
 
             // Obtenemos todos los Size que no están en la lista de asociados
-            var sizesNoAsociados = _context.Sizes
+            var sizesNoAsociados = _db.Sizes
                 .Where(s => !sizeIdsAsociados.Contains(s.SizeId))
                 .ToList();
 
@@ -131,7 +131,7 @@ namespace TPShoes.Datos.Repositorios
 
         public List<Entidades.Clases.Size> GetSizesPorId(int shoeId, bool incluyeShoe = false)
         {
-            IQueryable<Entidades.Clases.Size> query = _context.Sizes;
+            IQueryable<Entidades.Clases.Size> query = _db.Sizes;
 
             if (incluyeShoe)
             {

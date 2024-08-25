@@ -1,4 +1,5 @@
-﻿using TPShoes.Datos;
+﻿using System.Linq.Expressions;
+using TPShoes.Datos;
 using TPShoes.Datos.Interfaces;
 using TPShoes.Entidades.Clases;
 using TPShoes.Servicios.Interfaces;
@@ -12,15 +13,15 @@ namespace TPShoes.Servicios.Servicios
         private readonly IUnitOfWork _unitOfWork;
         public ColoursServicio(IRepositorioColours repository, IUnitOfWork unitOfWork)
         {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _unitOfWork = unitOfWork;
-        }
+            _repository = repository ?? throw new ArgumentException("Error en la dependencia");
+			_unitOfWork = unitOfWork ?? throw new ArgumentException("Error en la dependencia");
+		}
         public void Borrar(Colour colour)
         {
             try
             {
                 _unitOfWork.BeginTransaction();
-                _repository.Borrar(colour);
+                _repository!.Delete(colour);
                 _unitOfWork.SaveChanges();
                 _unitOfWork.Commit();
             }
@@ -33,45 +34,47 @@ namespace TPShoes.Servicios.Servicios
 
         public bool EstaRelacionado(Colour colour)
         {
-            return _repository.EstaRelacionado(colour);
+            return _repository!.EstaRelacionado(colour);
         }
 
         public bool Existe(Colour colour)
         {
-            return _repository.Existe(colour);
+            return _repository!.Existe(colour);
         }
         public int GetCantidad()
         {
-            return _repository.GetCantidad();
+            return _repository!.GetCantidad();
         }
-        public Colour? GetColourPorId(int colourId)
+        public Colour? GetColourPorId(Expression<Func<Colour, bool>>? filter = null, string? propertiesNames = null, bool tracked = true)
         {
-            return _repository.GetColourPorId(colourId);
+            return _repository!.Get(filter, propertiesNames, tracked);
         }
 
         public Colour GetColourPorNombre(string colourNombre)
         {
-            return _repository.GetColourPorNombre(colourNombre);
+            return _repository!.GetColourPorNombre(colourNombre);
         }
 
-        public List<Colour> GetLista()
-        {
-            return _repository.GetLista();
-        }
+		public IEnumerable<Colour>? GetLista(Expression<Func<Colour, bool>>? filter = null,
+		   Func<IQueryable<Colour>, IOrderedQueryable<Colour>>? orderBy = null,
+		   string? propertiesNames = null)
+		{
+			return _repository!.GetAll(filter, orderBy, propertiesNames);
+		}
 
-        public void Guardar(Colour colour)
+		public void Guardar(Colour colour)
         {
             try
             {
                 _unitOfWork.BeginTransaction();
                 if (colour.ColourId == 0)
                 {
-                    _repository.Agregar(colour);
+                    _repository!.Add(colour);
                     _unitOfWork.SaveChanges();
                 }
                 else
                 {
-                    _repository.Editar(colour);
+                    _repository!.Editar(colour);
                     _unitOfWork.SaveChanges();
                 }
                 _unitOfWork.SaveChanges();

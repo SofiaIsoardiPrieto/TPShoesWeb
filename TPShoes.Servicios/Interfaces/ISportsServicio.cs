@@ -1,4 +1,5 @@
-﻿using TPShoes.Entidades.Clases;
+﻿using System.Linq.Expressions;
+using TPShoes.Entidades.Clases;
 
 namespace TPShoes.Servicios.Interfaces
 {
@@ -7,8 +8,12 @@ namespace TPShoes.Servicios.Interfaces
         void Borrar(Sport sport);
         bool EstaRelacionado(Sport sport);
         bool Existe(Sport sport);
-        List<Sport> GetLista();
-        Sport? GetSportPorId(int sportId);
+        IEnumerable<Sport>? GetLista(Expression<Func<Sport, bool>>? filter = null,
+			Func<IQueryable<Sport>, IOrderedQueryable<Sport>>? orderBy = null,
+			string? propertiesNames = null);
+        Sport? GetSportPorId(Expression<Func<Sport, bool>>? filter = null,
+			string? propertiesNames = null,
+			bool tracked = true);
         Sport GetSportPorNombre(string sportNombre);
         void Guardar(Sport sport);
         int GetCantidad();

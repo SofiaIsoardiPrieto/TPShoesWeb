@@ -4,78 +4,50 @@ using TPShoes.Entidades.Clases;
 
 namespace TPShoes.Datos.Repositorios
 {
-	public class RepositorioBrands : IRepositorioBrands
-    {
+	public class RepositorioBrands : RepositorioGenerico<Brand>, IRepositorioBrands
+	{
 
-        private readonly DBContextShoes _context;
+        private readonly DBContextShoes _db;
 
-        public RepositorioBrands(DBContextShoes context)
-        {
-            _context = context;
+        public RepositorioBrands(DBContextShoes db) : base(db)
+		{
+            _db = db ?? throw new ArgumentNullException(nameof(db)); 
         }
-
-        public void Agregar(Brand brand)
-        {
-            _context.Add(brand);
-        }
-
-        public void Borrar(Brand brand)
-        {
-            _context.Remove(brand);
-        }
-
         public void Editar(Brand brand)
         {
-            _context.Update(brand);
+            _db.Update(brand);
         }
-        //ta bien?
+     
         public bool EstaRelacionado(Brand brand)
         {
-            return _context
+            return _db
                 .Shoes
                 .Any(p => p.BrandId == brand.BrandId);
         }
-
         public bool Existe(Brand brand)
         {
             if (brand.BrandId == 0)
             {
-                return _context.Brands
+                return _db.Brands
                     .Any(br => br.BrandName == brand.BrandName);
             }
-            return _context.Brands
+            return _db.Brands
                 .Any(br => br.BrandName == brand.BrandName &&
                 br.BrandId != brand.BrandId);
-        }
-
-        public Brand? GetBrandPorId(int brandId)
-        {
-            return _context.Brands.FirstOrDefault(b => b.BrandId == brandId);
-        }
-
+        }  
         public Brand? GetBrandPorNombre(string brandNombre)
         {
-            return _context.Brands
+            return _db.Brands
                 .FirstOrDefault(br => br.BrandName == brandNombre);
         }
 
         public int GetCantidad()
         {
-            return _context.Brands.Count();
+            return _db.Brands.Count();
         }
-
-        public List<Brand> GetLista()
-        {
-
-            return _context.Brands
-                .OrderBy(br => br.BrandName)
-                .AsNoTracking()
-                .ToList();
-        }
-
         public void SaveChanges()
         {
-            _context.SaveChanges();
+            _db.SaveChanges();
         }
     }
 

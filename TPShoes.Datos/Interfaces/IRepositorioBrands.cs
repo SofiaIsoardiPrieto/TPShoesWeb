@@ -2,17 +2,13 @@
 
 namespace TPShoes.Datos.Interfaces
 {
-	public interface IRepositorioBrands
-    {
-        void Agregar(Brand brand);
-        void Borrar(Brand brand);
+	public interface IRepositorioBrands:IRepositorioGenerico<Brand>
+	{     
         void Editar(Brand brand);
         bool EstaRelacionado(Brand brand);
-        bool Existe(Brand brand);
-        Brand? GetBrandPorId(int brandId);
+        bool Existe(Brand brand);   
         Brand GetBrandPorNombre(string brandNombre);
         int GetCantidad();
-        List<Brand> GetLista();
         void SaveChanges();
     }
 

@@ -1,7 +1,6 @@
-﻿using Mono.TextTemplating;
-using System.Diagnostics.Metrics;
+﻿using AutoMapper;
 using TPShoes.Entidades.Clases;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using TPShoes.Entidades.ViewModels;
 
 namespace TPShoes.Web.Mapping
 {
@@ -17,6 +16,9 @@ namespace TPShoes.Web.Mapping
 
 		private void LoadBrandMapping()
 		{
+			CreateMap<Brand, BrandEditVm>();
+			CreateMap<Brand, BrandEditVm>().ReverseMap();
+
 			//CreateMap<City, CityListVm>().
 			//	ForMember(dest => dest.CountryName,
 			//	opt => opt.MapFrom(c => c.Country.CountryName))

@@ -1,4 +1,5 @@
-﻿using TPShoes.Entidades.Clases;
+﻿using System.Linq.Expressions;
+using TPShoes.Entidades.Clases;
 
 namespace TPShoes.Servicios.Interfaces
 {
@@ -8,9 +9,13 @@ namespace TPShoes.Servicios.Interfaces
         bool EstaRelacionado(Genre genre);
         bool Existe(Genre genre);
         int GetCantidad();
-        Genre? GetGenrePorId(int genreId);
+        Genre? GetGenrePorId(Expression<Func<Genre, bool>>? filter = null,
+			string? propertiesNames = null,
+			bool tracked = true);
         Genre GetGenrePorNombre(string genreNombre);
-        List<Genre> GetLista();
+        IEnumerable<Genre>? GetLista(Expression<Func<Genre, bool>>? filter = null,
+			Func<IQueryable<Genre>, IOrderedQueryable<Genre>>? orderBy = null,
+			string? propertiesNames = null);
         void Guardar(Genre genre);
         
     }

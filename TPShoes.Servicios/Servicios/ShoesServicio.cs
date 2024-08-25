@@ -16,10 +16,10 @@ namespace TPShoes.Servicios.Servicios
 
         public ShoesServicio(IRepositorioShoes repository, IUnitOfWork unitOfWork)
         {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _unitOfWork = unitOfWork;
-            //_proveedorRepository = proveedorRepository;
-        }
+            _repository = repository ?? throw new ArgumentException("Error en la dependencia");
+			_unitOfWork = unitOfWork ?? throw new ArgumentException("Error en la dependencia");
+			//_proveedorRepository = proveedorRepository;
+		}
 
         public void Borrar(int shoeId)
         {

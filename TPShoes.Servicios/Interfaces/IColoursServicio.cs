@@ -1,4 +1,5 @@
-﻿using TPShoes.Entidades.Clases;
+﻿using System.Linq.Expressions;
+using TPShoes.Entidades.Clases;
 
 namespace TPShoes.Servicios.Interfaces
 {
@@ -7,9 +8,13 @@ namespace TPShoes.Servicios.Interfaces
         void Borrar(Colour colour);
         bool EstaRelacionado(Colour colour);
         bool Existe(Colour colour);
-        Colour? GetColourPorId(int colourId);
+        Colour? GetColourPorId(Expression<Func<Colour, bool>>? filter = null,
+			string? propertiesNames = null,
+			bool tracked = true);
         Colour GetColourPorNombre(string colourNombre);
-        List<Colour> GetLista();
+		IEnumerable<Colour>? GetLista(Expression<Func<Colour, bool>>? filter = null,
+			Func<IQueryable<Colour>, IOrderedQueryable<Colour>>? orderBy = null,
+			string? propertiesNames = null);
         void Guardar(Colour colour);
         int GetCantidad();
 
