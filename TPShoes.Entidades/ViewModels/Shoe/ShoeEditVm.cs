@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TPShoes.Entidades.ViewModels
+namespace TPShoes.Entidades.ViewModels.Shoe
 {
     public class ShoeEditVm
     {

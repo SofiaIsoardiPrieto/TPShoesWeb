@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TPShoes.Entidades.Clases;
-using TPShoes.Entidades.ViewModels;
+using TPShoes.Entidades.ViewModels.Brand;
 using TPShoes.Servicios.Interfaces;
 using X.PagedList.Extensions;
 
@@ -9,28 +9,47 @@ namespace TPShoes.Web.Controllers
 {
 	public class BrandController : Controller
 	{
-		private readonly IBrandsServicio? _servicios;
+		private readonly IBrandsServicio? _serviciosBrand;
 		private readonly IMapper? _mapper;
 		public BrandController(IBrandsServicio? servicios, IMapper mapper)
 		{
-			_servicios = servicios;
-			_mapper = mapper;
+			_serviciosBrand = servicios ?? throw new ApplicationException("Dependencies not set");
+			_mapper = mapper ?? throw new ApplicationException("Dependencies not set");
 		}
 
-		public IActionResult Index(int? page)
+		public IActionResult Index(int? page, string? searchTerm = null, bool viewAll = false, int pageSize = 10)
 		{
 			int pageNumber = page ?? 1;
-			int pageSize = 10;
-			var brands = _servicios?
-				.GetLista(orderBy: o => o.OrderBy(c => c.BrandName));
-			var categoriesVm = _mapper?.Map<List<BrandEditVm>>(brands)
-				.ToPagedList(pageNumber, pageSize);
+			ViewBag.currentPageSize = pageSize;
+			IEnumerable<Brand>? brands;
+			if (!viewAll)
+			{
+				if (!string.IsNullOrEmpty(searchTerm))
+				{
+					brands = _serviciosBrand?
+						.GetLista(orderBy: o => o.OrderBy(c => c.BrandName),
+							filter: c => c.BrandName.Contains(searchTerm));
+					ViewBag.currentSearchTerm = searchTerm;
+				}
+				else
+				{
+					brands = _serviciosBrand?
+						.GetLista(orderBy: o => o.OrderBy(c => c.BrandName));
+				}
+			}
+			else
+			{
+				brands = _serviciosBrand?
+					.GetLista(orderBy: o => o.OrderBy(c => c.BrandName));
+			}
+			var brandVm = _mapper?.Map<List<BrandListVm>>(brands)
+			   .ToPagedList(pageNumber, pageSize);
 
-			return View(categoriesVm);
+			return View(brandVm);
 		}
 		public IActionResult UpSert(int? id)
 		{
-			if (_servicios == null || _mapper == null)
+			if (_serviciosBrand == null || _mapper == null)
 			{
 				return StatusCode(StatusCodes.Status500InternalServerError, "Dependencias no están configuradas correctamente");
 			}
@@ -43,7 +62,7 @@ namespace TPShoes.Web.Controllers
 			{
 				try
 				{
-					Brand? brand = _servicios.GetBrandPorId(filter: c => c.BrandId == id);
+					Brand? brand = _serviciosBrand.GetBrandPorId(filter: c => c.BrandId == id);
 					if (brand == null)
 					{
 						return NotFound();
@@ -56,38 +75,36 @@ namespace TPShoes.Web.Controllers
 					// Log the exception (ex) here as needed
 					return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving the record.");
 				}
-
 			}
 			return View(brandVm);
-
 		}
 
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult UpSert(BrandEditVm categoryVm)
+		public IActionResult UpSert(BrandEditVm BrandVm)
 		{
 			if (!ModelState.IsValid)
 			{
-				return View(categoryVm);
+				return View(BrandVm);
 			}
 
-			if (_servicios == null || _mapper == null)
+			if (_serviciosBrand == null || _mapper == null)
 			{
 				return StatusCode(StatusCodes.Status500InternalServerError, "Dependencias no están configuradas correctamente");
 			}
 
 			try
 			{
-				Brand brand = _mapper.Map<Brand>(categoryVm);
+				Brand brand = _mapper.Map<Brand>(BrandVm);
 
-				if (_servicios.Existe(brand))
+				if (_serviciosBrand.Existe(brand))
 				{
 					ModelState.AddModelError(string.Empty, "Record already exist");
-					return View(categoryVm);
+					return View(BrandVm);
 				}
 
-				_servicios.Guardar(brand);
+				_serviciosBrand.Guardar(brand);
 				TempData["success"] = "Record successfully added/edited";
 				return RedirectToAction("Index");
 			}
@@ -95,7 +112,7 @@ namespace TPShoes.Web.Controllers
 			{
 				// Log the exception (ex) here as needed
 				ModelState.AddModelError(string.Empty, "An error occurred while editing the record.");
-				return View(categoryVm);
+				return View(BrandVm);
 			}
 		}
 
@@ -107,23 +124,23 @@ namespace TPShoes.Web.Controllers
 			{
 				return NotFound();
 			}
-			Brand? brand = _servicios?.GetBrandPorId(filter: c => c.BrandId == id);
+			Brand? brand = _serviciosBrand?.GetBrandPorId(filter: c => c.BrandId == id);
 			if (brand is null)
 			{
 				return NotFound();
 			}
 			try
 			{
-				if (_servicios == null || _mapper == null)
+				if (_serviciosBrand == null || _mapper == null)
 				{
 					return StatusCode(StatusCodes.Status500InternalServerError, "Dependencias no están configuradas correctamente");
 				}
 
-				if (_servicios.EstaRelacionado(brand))
+				if (_serviciosBrand.EstaRelacionado(brand))
 				{
 					return Json(new { success = false, message = "Related Record... Delete Deny!!" }); ;
 				}
-				_servicios.Borrar(brand);
+				_serviciosBrand.Borrar(brand);
 				return Json(new { success = true, message = "Record successfully deleted" });
 			}
 			catch (Exception)

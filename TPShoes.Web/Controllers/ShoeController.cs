@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TPShoes.Entidades.Dtos;
-using TPShoes.Entidades.ViewModels;
+using TPShoes.Entidades.ViewModels.Shoe;
 using TPShoes.Servicios.Interfaces;
 
 namespace TPShoes.Web.Controllers

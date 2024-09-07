@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TPShoes.Herramientas", "TPS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TPShoes.Servicios", "TPShoes.Servicios\TPShoes.Servicios.csproj", "{A9655F29-D43C-4187-A470-B9EF4D4683FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TPShoes.Web", "TPShoes.Web\TPShoes.Web.csproj", "{2083DFFD-F5B5-455C-881B-75BA6214154B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TPShoes.Web", "TPShoes.Web\TPShoes.Web.csproj", "{2083DFFD-F5B5-455C-881B-75BA6214154B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

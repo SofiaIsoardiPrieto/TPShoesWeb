@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using TPShoes.Entidades.Clases;
-using TPShoes.Entidades.ViewModels;
+using TPShoes.Entidades.ViewModels.Brand;
 
 namespace TPShoes.Web.Mapping
 {
-	public class MappingProfile : Profile
+    public class MappingProfile : Profile
 	{
 		public MappingProfile()
 		{
