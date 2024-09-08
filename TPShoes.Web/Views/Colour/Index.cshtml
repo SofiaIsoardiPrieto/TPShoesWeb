@@ -1,19 +1,19 @@
 ﻿﻿
-@model IPagedList<BrandListVm>
+@model IPagedList<ColourListVm>
 @using X.PagedList
 @using X.Web.PagedList
 @{
-    ViewData["Title"] = "Brand List";
+    ViewData["Title"] = "Colour List";
 }
 <div class="container">
     @Html.AntiForgeryToken()
     <div class="row mb-3">
         <div class="col-6">
-            <h3>Brand List</h3>
+            <h3>Colour List</h3>
 
         </div>
         <div class="col-6 text-end">
-            <a asp-controller="Brand" asp-action="UpSert" class="btn btn-primary">
+            <a asp-controller="Colour" asp-action="UpSert" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i>
                 Nuevo
             </a>
@@ -22,7 +22,7 @@
     <table class="table table-bordered table-hover">
         <thead>
             <tr>
-                <th style="width:50%">Brand</th>
+                <th style="width:50%">Colour</th>
                 <th style="width:25%">Actions</th>
             </tr>
         </thead>
@@ -31,17 +31,17 @@
             {
                 foreach (var item in Model)
                 {
-                    <tr id="@item.BrandId">
+                    <tr id="@item.ColourId">
                         <td>
-                            @item.BrandName
+                            @item.ColourName
 
                         </td>
                         <td>
-                            <a class="btn btn-warning" asp-controller="Brand" asp-action="UpSert" asp-route-id="@item.BrandId">
+                            <a class="btn btn-warning" asp-controller="Colour" asp-action="UpSert" asp-route-id="@item.ColourId">
                                 <i class="bi bi-pencil-square"></i>&nbsp;
                                 Edit
                             </a>
-                            <a onclick="Delete('/Brand/Delete/@item.BrandId',@item.BrandId,'@item.BrandName')" class="btn btn-danger">
+                            <a onclick="Delete('/Colour/Delete/@item.ColourId',@item.ColourId,'@item.ColourName')" class="btn btn-danger">
                                 <i class="bi bi-trash-fill"></i>
                                 Delete
                             </a>
@@ -53,7 +53,7 @@
             {
                 <tr>
                     <td colspan="2" class="text-center">
-                       No Brands added yet!
+                       No Colours added yet!
 
                     </td>
                 </tr>
