@@ -1,66 +1,107 @@
-﻿@model IPagedList<BrandListVm>
+﻿﻿@model IPagedList<BrandListVm>
 @using X.PagedList
 @using X.Web.PagedList
-
 @{
-	ViewData["Title"] = "Listado de Brands";
+    ViewData["Title"] = "Brand List";
 }
+<div class="container">
+    @Html.AntiForgeryToken()
+    <div class="row mb-3">
+        <div class="col-6">
+            <h3>Brand List</h3>
 
-@Html.AntiForgeryToken()
-<div class="row w-75 mb-4">
-	<div class="col-6">
-		<h3>Lista de Bands</h3>
-	</div>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Categories" asp-action="UpSert" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i>
+                Nuevo
+            </a>
+        </div>
+    </div>
+    <form method="get" class="form-inline" asp-action="Index">
+        <div class="d-flex flex-row align-items-center">
+            <div class="col-auto mx-1">
+                <label for="pageSize">Show:</label>
+            </div>
+            <div class="col-auto mx-2">
+                <select class="form-select" id="pageSize" name="pageSize" onchange="this.form.submit()" style="width:70px">
+                    @{
+                        var options = new List<int> { 5, 10, 15, 20 };
+                        foreach (var option in options)
+                        {
+                            if(ViewBag.currentPageSize==option)
+                            {
+                                <option selected value="@option">@option</option>
+
+                            }
+                            else
+                            {
+                                <option value="@option">@option</option>
+
+                            }
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-auto mx-2" style="width: 200px;">
+                <input type="text" name="searchTerm" id="searchTerm" class="form-control" placeholder="Search by..." value="@ViewBag.currentSearchTerm" />
+            </div>
+            <div class="col-auto d-flex">
+                <button type="submit" class="btn btn-primary mx-2">
+                    <i class="bi bi-search"></i> Search
+                </button>
+                <button type="submit" class="btn btn-secondary" id="viewAll" name="viewAll" value="true">
+                    <i class="bi bi-list"></i> View All
+                </button>
+            </div>
+        </div>
+    </form>
+    <table class="table table-bordered table-hover mt-3">
+        <thead>
+            <tr>
+                <th style="width:auto">Brand Name</th> 
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr id="@item.BrandId">
+                        <td>
+                            @item.BrandName
+
+                        </td>
+                        <td>
+                            <a class="btn btn-warning" asp-controller="Categories" asp-action="UpSert" asp-route-id="@item.BrandId">
+                                <i class="bi bi-pencil-square"></i>&nbsp;
+                                Edit
+                            </a>
+                            <a onclick="Delete('/Categories/Delete/@item.BrandId',@item.BrandId,'@item.BrandName')" class="btn btn-danger">
+                                <i class="bi bi-trash-fill"></i>
+                                Delete
+                            </a>                        
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-center">
+                        No brand have been added yet!
+
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+    <partial name="_Pager" model="@Model" />
+
 </div>
-<table class="table table-bordered table-hover">
-	<thead>
-		<tr>
-			<th>Brand</th>			
-			<th>
-				<div class="col-6">
-					<a asp-controller="Brand" asp-action="UpSert" class="btn btn-primary">
-						<i class="bi bi-plus-circle-dotted"></i>
-						Nuevo
-					</a>
-				</div>
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		@if (Model.Any())
-		{
-			foreach (var item in Model)
-			{
-				<tr>
-					<td>@item.BrandName</td>
-					
-
-					<td>
-						<a onclick="Delete('/TiposDePlantas/Delete/@item.BrandId',@item.BrandId)" class="btn btn-danger">
-							<i class="bi bi-trash-fill"></i>
-							Borrar
-						</a>
-						<a asp-controller="Shoe" asp-action="UpSert" asp-route-id="@item.BrandId" class="btn btn-warning">
-							<i class="bi bi-pencil-square"></i>
-							Editar
-						</a>
-					</td>
-				</tr>
-			}
-		}
-		else
-		{
-			<tr>
-				<td>Error con el model</td>
-			</tr>
-		}
-	</tbody>
-</table>
-<partial name="_Pager" model="@Model" />
-
-</div>
-@section Scripts {
-	<script src="~/lib/jquery/dist/jquery.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-	<script src="~/js/common.js"></script>
+@section Scripts{
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="~/js/common.js"></script>
 }

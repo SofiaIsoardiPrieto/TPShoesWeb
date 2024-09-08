@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.ViewModels.Brand;
+using TPShoes.Entidades.ViewModels.Genre;
+using TPShoes.Entidades.ViewModels.Colour;
+using TPShoes.Entidades.ViewModels.Sport;
 
 namespace TPShoes.Web.Mapping
 {
@@ -16,7 +19,7 @@ namespace TPShoes.Web.Mapping
 
 		private void LoadBrandMapping()
 		{
-			CreateMap<Brand, BrandEditVm>();
+			CreateMap<Brand, BrandListVm>();
 			CreateMap<Brand, BrandEditVm>().ReverseMap();
 
 			//CreateMap<City, CityListVm>().
@@ -28,23 +31,26 @@ namespace TPShoes.Web.Mapping
 		}
 		private void LoadGenreMapping()
 		{
-			//CreateMap<Country, CountryListVm>();
-			//CreateMap<Country, CountryEditVm>().ReverseMap();
+			CreateMap<Genre, GenreListVm>();
+			CreateMap<Genre, GenreEditVm>().ReverseMap();
 		}
 
 		private void LoadColourMapping()
 		{
-			//CreateMap<Category, CategoryListVm>();
-			//CreateMap<Category, CategoryEditVm>().ReverseMap();
+			CreateMap<Colour, ColourListVm>();
+			CreateMap<Colour, ColourEditVm>().ReverseMap();
 		}
 
 		private void LoadSportMapping()
 		{
-			//CreateMap<State, StateListVm>()
-			//	.ForMember(dest => dest.Country,
-			//	opt => opt.MapFrom(src => src.Country.CountryName));
-			//CreateMap<State, StateEditVm>().ReverseMap();
-		}
+            CreateMap<Sport, SportListVm>();
+            CreateMap<Sport, SportEditVm>().ReverseMap();
+
+            //CreateMap<State, StateListVm>()
+            //	.ForMember(dest => dest.Country,
+            //	opt => opt.MapFrom(src => src.Country.CountryName));
+            //CreateMap<State, StateEditVm>().ReverseMap();
+        }
 
 	}
 }
