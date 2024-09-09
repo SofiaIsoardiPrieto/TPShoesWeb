@@ -12,13 +12,56 @@
             <h3>Size List</h3>
 
         </div>
-      
+        <div class="col-6 text-end">
+            <a asp-controller="Size" asp-action="UpSert" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i>
+                Nuevo
+            </a>
+        </div>
     </div>
+    <form method="get" class="form-inline" asp-action="Index">
+        <div class="d-flex flex-row align-items-center">
+            <div class="col-auto mx-1">
+                <label for="pageSize">Show:</label>
+            </div>
+            <div class="col-auto mx-2">
+                <select class="form-select" id="pageSize" name="pageSize" onchange="this.form.submit()" style="width:70px">
+                    @{
+                        var options = new List<int> { 5, 10, 15, 20 };
+                        foreach (var option in options)
+                        {
+                            if (ViewBag.currentPageSize == option)
+                            {
+                                <option selected value="@option">@option</option>
+
+                            }
+                            else
+                            {
+                                <option value="@option">@option</option>
+
+                            }
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-auto mx-2" style="width: 200px;">
+                <input type="text" name="searchTerm" id="searchTerm" class="form-control" placeholder="Search by..." value="@ViewBag.currentSearchTerm" />
+            </div>
+            <div class="col-auto d-flex">
+                <button type="submit" class="btn btn-primary mx-2">
+                    <i class="bi bi-search"></i> Search
+                </button>
+                <button type="submit" class="btn btn-secondary" id="viewAll" name="viewAll" value="true">
+                    <i class="bi bi-list"></i> View All
+                </button>
+            </div>
+        </div>
+    </form>
     <table class="table table-bordered table-hover">
         <thead>
             <tr>
-                <th style="width:auto">Size</th>
-           
+                <th style="width:50%">Size</th>
+   
             </tr>
         </thead>
         <tbody>
@@ -31,6 +74,7 @@
                             @item.SizeNumber
 
                         </td>
+                       
                     </tr>
                 }
             }
@@ -38,7 +82,7 @@
             {
                 <tr>
                     <td colspan="2" class="text-center">
-                       No Sizes added yet!
+                        No Sizes added yet!
 
                     </td>
                 </tr>
