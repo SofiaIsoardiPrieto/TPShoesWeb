@@ -6,6 +6,6 @@ namespace TPShoes.Entidades.ViewModels.Size
     {
         public int SizeId { get; set; }
         [DisplayName("Size")]
-        public string SizeName { get; set; } = null!;
+        public decimal SizeNumber { get; set; } 
     }
 }

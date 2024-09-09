@@ -4,6 +4,7 @@ using TPShoes.Entidades.ViewModels.Brand;
 using TPShoes.Entidades.ViewModels.Genre;
 using TPShoes.Entidades.ViewModels.Colour;
 using TPShoes.Entidades.ViewModels.Sport;
+using TPShoes.Entidades.ViewModels.Size;
 
 namespace TPShoes.Web.Mapping
 {
@@ -15,7 +16,8 @@ namespace TPShoes.Web.Mapping
 			LoadGenreMapping();
 			LoadColourMapping();
 			LoadSportMapping();
-		}
+            LoadSizeMapping();
+        }
 
 		private void LoadBrandMapping()
 		{
@@ -51,6 +53,10 @@ namespace TPShoes.Web.Mapping
             //	opt => opt.MapFrom(src => src.Country.CountryName));
             //CreateMap<State, StateEditVm>().ReverseMap();
         }
-
-	}
+        private void LoadSizeMapping()
+        {
+            CreateMap<Size, SizeListVm>();
+            
+        }
+    }
 }
