@@ -203,6 +203,13 @@ namespace TPShoes.Datos.Repositorios
                 .Where(s => s.SizeShoe.Any(ss => ss.ShoeId == shoeId))
                 .ToList();
         }
+        public bool ExisteRelacion(Shoe shoe, Size size)
+        {
+            if (shoe == null || size == null) return false;
 
+            return _db.SizeShoes
+                .Any(pp => pp.ShoeId == shoe.ShoeId
+                && pp.SizeId == size.SizeId);
+        }
     }
 }

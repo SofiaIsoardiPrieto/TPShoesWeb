@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using System.Diagnostics;
+using System.Linq.Expressions;
+using System.Web.Mvc;
 using TPShoes.Datos;
 using TPShoes.Datos.Interfaces;
 using TPShoes.Entidades.Clases;
@@ -21,27 +23,20 @@ namespace TPShoes.Servicios.Servicios
 			//_proveedorRepository = proveedorRepository;
 		}
 
-        public void Borrar(int shoeId)
+      
+        public void Borrar(Shoe shoe)
         {
             try
             {
                 _unitOfWork.BeginTransaction();
-
-                var shoe = _repository.GetShoePorId(shoeId) ?? throw new Exception("El Shoe especificado no existe.");
-
-                _repository.EliminarRelaciones(shoe);
-               // _unitOfWork.SaveChanges();
-
-
-                _repository.Borrar(shoe);
-                //error aqui
-               // _unitOfWork.SaveChanges();
-
+                _repository!.Delete(shoe);
+                _unitOfWork.SaveChanges();
                 _unitOfWork.Commit();
             }
             catch (Exception)
             {
                 _unitOfWork.Rollback();
+
                 throw;
             }
         }
@@ -63,23 +58,7 @@ namespace TPShoes.Servicios.Servicios
                 throw new Exception("Habilita el servidor!.", ex);
             }
         }
-        public List<Shoe> GetLista()
-        {
-            return _repository.GetLista();
-        }
-
-        public List<ShoeDto> GetListaPaginadaOrdenadaFiltrada(int registrosPorPagina,
-            int paginaActual, Orden? orden = null, Brand? BrandFiltro = null,
-            Colour? ColourFiltro = null, Expression<Func<Shoe, bool>>? rangoPrecio = null)
-        {
-            return _repository.GetListaPaginadaOrdenadaFiltrada( registrosPorPagina,paginaActual,
-                orden, BrandFiltro, ColourFiltro,rangoPrecio);
-        }
-
-        public Shoe GetShoePorId(int shoeId)
-        {
-            return _repository.GetShoePorId(shoeId);
-        }
+       
 
         public IEnumerable<IGrouping<int, Shoe>> GetShoesAgrupadosPorGenre()
         {
@@ -96,28 +75,25 @@ namespace TPShoes.Servicios.Servicios
             try
             {
                 _unitOfWork.BeginTransaction();
-
-                if (shoe.ShoeId == 0)
+                if (shoe.GenreId == 0)
                 {
-                    _repository.Agregar(shoe);
-                    _unitOfWork.SaveChanges(); // Guardar cambios para obtener el id de la planta agregada
-
-                    
+                    _repository!.Add(shoe);
+                    _unitOfWork.SaveChanges();
                 }
                 else
                 {
-                    _repository.Editar(shoe);
-                    _unitOfWork.SaveChanges(); // Guardar cambios de la planta antes de manejar relaciones
-
+                    _repository!.Editar(shoe);
+                    _unitOfWork.SaveChanges();
                 }
-                _unitOfWork.SaveChanges(); // Guardar todos los cambios al final
-                _unitOfWork.Commit(); // Confirmar los cambios
+                _unitOfWork.SaveChanges();
+                _unitOfWork.Commit();
             }
             catch (Exception)
             {
                 _unitOfWork.Rollback();
                 throw;
             }
+
         }
 
         public void Editar(Shoe shoe, int? sizeId = null)
@@ -163,10 +139,7 @@ namespace TPShoes.Servicios.Servicios
             }
         }
 
-        public bool ExisteRelacion(Shoe shoe, Size size)
-        {
-            return _repository.ExisteRelacion(shoe, size);
-        }
+      
 
         public void AsignarSizeAShoe(Shoe shoe, Size size)
         {
@@ -223,6 +196,22 @@ namespace TPShoes.Servicios.Servicios
 
                 throw;
             }
+        }
+
+        IEnumerable<Shoe>? IShoesServicio.GetLista(Expression<Func<Shoe, bool>>? filter, Func<IQueryable<Shoe>, IOrderedQueryable<Shoe>>? orderBy, string? propertiesNames)
+        {
+            return _repository!.GetAll(filter, orderBy, propertiesNames);
+        }
+       
+        public Shoe? GetShoePorId(Expression<Func<Shoe, bool>>? filter = null, string? propertiesNames = null, bool tracked = true)
+        {
+            return _repository!.Get(filter, propertiesNames, tracked);
+        }
+      
+
+        public bool EstaRelacionado(int shoeId)
+        {
+            return _repository!.EstaRelacionado(shoeId);
         }
     }
 

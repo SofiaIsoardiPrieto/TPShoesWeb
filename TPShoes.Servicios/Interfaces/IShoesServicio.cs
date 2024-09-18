@@ -8,21 +8,23 @@ namespace TPShoes.Servicios.Interfaces
 {
 	public interface IShoesServicio
     {
+
         void Guardar(Shoe shoe);
-        void Editar(Shoe shoe, int? sizeId = null);
-        void Borrar(int shoeId);
+        void Borrar(Shoe shoe);
         bool Existe(Shoe shoe);
         int GetCantidad(Expression<Func<Shoe, bool>>? filtro = null);
-   
-        List<Shoe> GetLista();
-        List<ShoeDto> GetListaPaginadaOrdenadaFiltrada(int registrosPorPagina,
-           int paginaActual , Orden? orden = null, Brand? BrandFiltro = null,
-           Colour? ColourFiltro = null, Expression<Func<Shoe, bool>>? rangoPrecio = null);
-        Shoe GetShoePorId(int shoeId);
+
+        Shoe? GetShoePorId(Expression<Func<Shoe, bool>>? filter = null,
+             string? propertiesNames = null,
+             bool tracked = true);
+        IEnumerable<Shoe>? GetLista(Expression<Func<Shoe, bool>>? filter = null,
+            Func<IQueryable<Shoe>, IOrderedQueryable<Shoe>>? orderBy = null,
+            string? propertiesNames = null);
+      
         IEnumerable<IGrouping<int, Shoe>> GetShoesPorMarcaEntreRangoPrecios(decimal rangoMin, decimal rangoMax);
         IEnumerable<IGrouping<int, Shoe>> GetShoesAgrupadosPorGenre();
         IEnumerable<IGrouping<int, Shoe>> GetShoesAgrupadosPorSport();
-        bool ExisteRelacion(Shoe shoe, Size size);
+        bool EstaRelacionado(int shoeId);
         void AsignarSizeAShoe(Shoe shoe, Size size);
         List<ShoeDto> GetListaDto();
         IEnumerable<ShoeDto> GetShoesFiltradosPorBrandYColour(int brandId, int colourId);

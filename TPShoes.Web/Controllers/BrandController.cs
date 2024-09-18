@@ -42,7 +42,7 @@ namespace TPShoes.Web.Controllers
 				brands = _serviciosBrand?
 					.GetLista(orderBy: o => o.OrderBy(c => c.BrandName));
 			}
-			var brandVm = _mapper?.Map<List<BrandListVm>>(brands)
+			var brandVm = _mapper?.Map<List<ShoeListVm>>(brands)
 			   .ToPagedList(pageNumber, pageSize);
 
 			return View(brandVm);

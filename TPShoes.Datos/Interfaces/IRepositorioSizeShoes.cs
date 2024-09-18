@@ -7,7 +7,7 @@ namespace TPShoes.Datos.Interfaces
 {
     public interface IRepositorioSizeShoes
     {
-
+        bool ExisteRelacion(Shoe shoe, Size size);
         void Agregar(Size size);
         void AgregarSizeShoe(SizeShoe sizeShoe);
         void Borrar(Size size);

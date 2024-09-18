@@ -7,25 +7,25 @@ using TPShoes.Entidades.Enum;
 
 namespace TPShoes.Datos.Repositorios
 {
-	public class RepositorioShoes : IRepositorioShoes
+	public class RepositorioShoes : RepositorioGenerico<Shoe>, IRepositorioShoes
     {
-        private readonly DBContextShoes _context;
+        private readonly DBContextShoes _db;
 
-        public RepositorioShoes() { }
-
-        public RepositorioShoes(DBContextShoes context) { _context = context; }
-
+        public RepositorioShoes(DBContextShoes db) : base(db)
+        {
+            _db = db ?? throw new ArgumentNullException(nameof(db));
+        }
         public bool Existe(Shoe shoe)
         {
             try
             {
                 if (shoe.ShoeId == 0)
                 {
-                    return _context.Shoes
+                    return _db.Shoes
                         .Any(s => s.Model == shoe.Model && s.BrandId == shoe.BrandId && s.ColourId == shoe.ColourId
                         && s.GenreId == shoe.GenreId && s.SportId == shoe.SportId);
                 }
-                return _context.Shoes
+                return _db.Shoes
                     .Any(s => s.Model == shoe.Model && s.BrandId == shoe.BrandId && s.ColourId == shoe.ColourId
                         && s.GenreId == shoe.GenreId && s.SportId == shoe.SportId && s.ShoeId != shoe.ShoeId);
             }
@@ -42,18 +42,18 @@ namespace TPShoes.Datos.Repositorios
 
             if (filtro != null)
             {
-                cantidad = _context.Shoes.Count(filtro);
+                cantidad = _db.Shoes.Count(filtro);
             }
             else
             {
-                cantidad = _context.Shoes.Count();
+                cantidad = _db.Shoes.Count();
 
             }
             return cantidad;
         }
         public List<Shoe> GetLista()
         {
-            var shoesQuery = _context.Shoes
+            var shoesQuery = _db.Shoes
                 .Include(s => s.Brand)
                 .Include(s => s.Colour)
                 .Include(s => s.Genre)
@@ -67,7 +67,7 @@ namespace TPShoes.Datos.Repositorios
           Orden? orden = null, Brand? BrandFiltro = null,
           Colour? ColourFiltro = null, Expression<Func<Shoe, bool>>? rangoPrecio = null)
         {
-            IQueryable<Shoe> query = _context.Shoes
+            IQueryable<Shoe> query = _db.Shoes
                 .Include(s => s.Brand)
                 .Include(s => s.Colour)
                 .Include(s => s.Genre)
@@ -148,12 +148,12 @@ namespace TPShoes.Datos.Repositorios
 
         public IEnumerable<IGrouping<int, Shoe>> GetShoesAgrupadosPorGenre()
         {
-            return _context.Shoes.GroupBy(s => s.GenreId)
+            return _db.Shoes.GroupBy(s => s.GenreId)
                .ToList();
         }
         public IEnumerable<IGrouping<int, Shoe>> GetShoesPorMarcaEntreRangoPrecios(decimal rangoMin, decimal rangoMax)
         {
-            return _context.Shoes
+            return _db.Shoes
                 .Include(s => s.Brand)
                 .Include(s => s.Genre)
                 .Include(s => s.Colour)
@@ -165,101 +165,101 @@ namespace TPShoes.Datos.Repositorios
 
         public IEnumerable<IGrouping<int, Shoe>> GetShoesAgrupadosPorSport()
         {
-            return _context.Shoes.GroupBy(s => s.SportId).ToList();
+            return _db.Shoes.GroupBy(s => s.SportId).ToList();
         }
 
         public void Agregar(Shoe shoe)
         {
             // Verificar si brand asociado a la shoe ya existe en la base de datos:
 
-            var brandExistente = _context.Brands
+            var brandExistente = _db.Brands
             .FirstOrDefault(t => t.BrandId == shoe.BrandId);
 
             // Si brand ya existe, adjuntarlo al contexto en lugar de agregarlo nuevamente:
             if (brandExistente != null)
             {
-                _context.Attach(brandExistente);
+                _db.Attach(brandExistente);
                 shoe.Brand = brandExistente;
             }
 
             //Genre
-            var genreExistente = _context.Genres
+            var genreExistente = _db.Genres
             .FirstOrDefault(t => t.GenreId == shoe.GenreId);
             if (genreExistente != null)
             {
-                _context.Attach(genreExistente);
+                _db.Attach(genreExistente);
                 shoe.Genre = genreExistente;
             }
 
             //Colour
-            var colourExistente = _context.Colours
+            var colourExistente = _db.Colours
             .FirstOrDefault(t => t.ColourId == shoe.ColourId);
             if (colourExistente != null)
             {
-                _context.Attach(colourExistente);
+                _db.Attach(colourExistente);
                 shoe.Colour = colourExistente;
             }
 
             //Sport
-            var sportExistente = _context.Sports
+            var sportExistente = _db.Sports
             .FirstOrDefault(t => t.SportId == shoe.SportId);
             if (sportExistente != null)
             {
-                _context.Attach(sportExistente);
+                _db.Attach(sportExistente);
                 shoe.Sport = sportExistente;
             }
 
             // Agregar la planta al contexto de la base de datos
-            _context.Shoes.Add(shoe);
+            _db.Shoes.Add(shoe);
         }
 
         public void Editar(Shoe shoe)
         {
-            var brandExistente = _context.Brands
+            var brandExistente = _db.Brands
                .FirstOrDefault(t => t.BrandId == shoe.BrandId);
 
             if (brandExistente != null)
             {
-                _context.Attach(brandExistente);
+                _db.Attach(brandExistente);
                 shoe.Brand = brandExistente;
             }
 
-            var sportExistente = _context.Sports
+            var sportExistente = _db.Sports
                 .FirstOrDefault(t => t.SportId == shoe.SportId);
             if (sportExistente != null)
             {
-                _context.Attach(sportExistente);
+                _db.Attach(sportExistente);
                 shoe.Sport = sportExistente;
             }
 
             // Verificar si el TipoDeGenero asociado
             // al shoe ya existe en la base de datos
-            var GenreExistente = _context.Genres
+            var GenreExistente = _db.Genres
               .FirstOrDefault(t => t.GenreId == shoe.GenreId);
             if (GenreExistente != null)
             {
-                _context.Attach(GenreExistente);
+                _db.Attach(GenreExistente);
                 shoe.Genre = GenreExistente;
             }
             // Verificar si el TipoDeColor asociado
             // al shoe ya existe en la base de datos
-            var colourExistente = _context.Colours
+            var colourExistente = _db.Colours
               .FirstOrDefault(t => t.ColourId == shoe.ColourId);
             if (colourExistente != null)
             {
-                _context.Attach(colourExistente);
+                _db.Attach(colourExistente);
                 shoe.Colour = colourExistente;
             }
 
             // Agregar la planta al contexto de la base de datos
-            _context.Shoes.Update(shoe);
+            _db.Shoes.Update(shoe);
         }
 
         public Shoe? GetShoePorId(int shoeId)
         {
             //el problema viena de aca!!!!
             Shoe? shoe =
-             _context?.Shoes
+             _db?.Shoes
                 .Include(p => p.Brand)   // Propiedad de navegación
                 .Include(p => p.Genre)   // Propiedad de navegación
                 .Include(p => p.Sport)   // Propiedad de navegación
@@ -272,36 +272,27 @@ namespace TPShoes.Datos.Repositorios
 
         public void EliminarRelaciones(Shoe shoe)
         {
-            var relacionesPasadas = _context.Shoes
+            var relacionesPasadas = _db.Shoes
               .Where(pp => pp.ShoeId == shoe.ShoeId)
               .ToList();
 
-            _context.Shoes
+            _db.Shoes
                 .RemoveRange(relacionesPasadas);
         }
 
         public void Borrar(Shoe shoe)
         {
-            _context.Shoes.Remove(shoe);
-        }
-
-        public bool ExisteRelacion(Shoe shoe, Size size)
-        {
-            if (shoe == null || size == null) return false;
-
-            return _context.SizeShoes
-                .Any(pp => pp.ShoeId == shoe.ShoeId
-                && pp.SizeId == size.SizeId);
+            _db.Shoes.Remove(shoe);
         }
 
         public void AsignarSizeAShoe(SizeShoe nuevoSizeShoe)
         {
-            _context.Set<SizeShoe>().Add(nuevoSizeShoe);
+            _db.Set<SizeShoe>().Add(nuevoSizeShoe);
         }
 
         public List<ShoeDto> GetListaDto()
         {
-            var query = _context.Shoes
+            var query = _db.Shoes
                .Include(p => p.Brand)
                .Include(p => p.Colour)
                .Include(p => p.Genre)
@@ -331,7 +322,7 @@ namespace TPShoes.Datos.Repositorios
 
             try
             {
-                return _context.Shoes
+                return _db.Shoes
                     .Where(s => s.BrandId == brandId && s.ColourId == colourId)
                     .Select(s => new ShoeDto
                     {
@@ -352,7 +343,10 @@ namespace TPShoes.Datos.Repositorios
             }
         }
 
-
+        public bool EstaRelacionado(int shoeId)
+        {
+            return _db.SizeShoes.Any(p => p.ShoeId == shoeId);
+        }
     }
 }
 

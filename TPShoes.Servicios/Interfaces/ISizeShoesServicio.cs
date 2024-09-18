@@ -18,6 +18,6 @@ namespace TPShoes.Servicios.Interfaces
         SizeShoe GetSizeShoePorId(int shoeId, int sizeId);
         void Borrar(SizeShoe sizeShoe);
         List<ShoeDto> GetListaShoeDtoPorSize(int sizeIdSeleccionado);
-       
+        bool ExisteRelacion(Shoe shoe, Size size);
     }
 }

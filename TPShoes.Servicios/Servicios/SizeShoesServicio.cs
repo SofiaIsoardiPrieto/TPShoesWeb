@@ -17,8 +17,8 @@ namespace TPShoes.Servicios.Servicios
             IUnitOfWork unitOfWork)
         {
             _repository = repository ?? throw new ArgumentException("Error en la dependencia");
-			_unitOfWork = unitOfWork ?? throw new ArgumentException("Error en la dependencia");
-		}
+            _unitOfWork = unitOfWork ?? throw new ArgumentException("Error en la dependencia");
+        }
 
         public void Borrar(SizeShoe sizeShoe)
         {
@@ -84,7 +84,7 @@ namespace TPShoes.Servicios.Servicios
             }
         }
 
-        
+
 
         public int GetCantidad()
         {
@@ -224,6 +224,9 @@ namespace TPShoes.Servicios.Servicios
             }
         }
 
-    
+        public bool ExisteRelacion(Shoe shoe, Entidades.Clases.Size size)
+        {
+            return _repository.ExisteRelacion(shoe, size);
+        }
     }
 }
