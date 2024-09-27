@@ -51,10 +51,10 @@ namespace Garden2024.Web.Controllers
             if (id == null || id == 0)
             {
                 ShoeVm = new ShoeEditVm();
-                ShoeVm.Brands = GetBrands();
-                ShoeVm.Genres = GetGenres();
-                ShoeVm.Colours = GetColours();
-                ShoeVm.Sports = GetSports();
+                ShoeVm.Brands = (IEnumerable<System.Web.Mvc.SelectListItem>)GetBrands();
+                ShoeVm.Genres = (IEnumerable<System.Web.Mvc.SelectListItem>)GetGenres();
+                ShoeVm.Colours = (IEnumerable<System.Web.Mvc.SelectListItem>)GetColours();
+                ShoeVm.Sports = (IEnumerable<System.Web.Mvc.SelectListItem>)GetSports();
 
             }
             else
@@ -67,10 +67,10 @@ namespace Garden2024.Web.Controllers
                         return NotFound();
                     }
                     ShoeVm = _mapper!.Map<ShoeEditVm>(shoe);
-                    ShoeVm.Brands = GetBrands();
-                    ShoeVm.Genres = GetGenres();
-                    ShoeVm.Colours = GetColours();
-                    ShoeVm.Sports = GetSports();
+                    ShoeVm.Brands = (IEnumerable<System.Web.Mvc.SelectListItem>)GetBrands();
+                    ShoeVm.Genres = (IEnumerable<System.Web.Mvc.SelectListItem>)GetGenres();
+                    ShoeVm.Colours = (IEnumerable<System.Web.Mvc.SelectListItem>)GetColours();
+                    ShoeVm.Sports = (IEnumerable<System.Web.Mvc.SelectListItem>)GetSports();
 
 
 
@@ -93,10 +93,10 @@ namespace Garden2024.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                shoeVm.Brands = GetBrands();
-                shoeVm.Genres = GetGenres();
-                shoeVm.Colours = GetColours();
-                shoeVm.Sports = GetSports();
+                shoeVm.Brands = (IEnumerable<System.Web.Mvc.SelectListItem>)GetBrands();
+                shoeVm.Genres = (IEnumerable<System.Web.Mvc.SelectListItem>)GetGenres();
+                shoeVm.Colours = (IEnumerable<System.Web.Mvc.SelectListItem>)GetColours();
+                shoeVm.Sports = (IEnumerable<System.Web.Mvc.SelectListItem>)GetSports();
 
 
                 return View(shoeVm);
@@ -110,10 +110,10 @@ namespace Garden2024.Web.Controllers
                 if (_shoeService!.Existe(shoe))
                 {
                     ModelState.AddModelError(string.Empty, "Record already exist");
-                    shoeVm.Brands = GetBrands();
-                    shoeVm.Genres = GetGenres();
-                    shoeVm.Colours = GetColours();
-                    shoeVm.Sports = GetSports();
+                    shoeVm.Brands = (IEnumerable<System.Web.Mvc.SelectListItem>)GetBrands();
+                    shoeVm.Genres = (IEnumerable<System.Web.Mvc.SelectListItem>)GetGenres();
+                    shoeVm.Colours = (IEnumerable<System.Web.Mvc.SelectListItem>)GetColours();
+                    shoeVm.Sports = (IEnumerable<System.Web.Mvc.SelectListItem>)GetSports();
 
                     return View(shoeVm);
                 }
@@ -126,10 +126,10 @@ namespace Garden2024.Web.Controllers
             {
                 // Log the exception (ex) here as needed
                 ModelState.AddModelError(string.Empty, "An error occurred while editing the record.");
-                shoeVm.Brands = GetBrands();
-                shoeVm.Genres = GetGenres();
-                shoeVm.Colours = GetColours();
-                shoeVm.Sports = GetSports();
+                shoeVm.Brands = (IEnumerable<System.Web.Mvc.SelectListItem>)GetBrands();
+                shoeVm.Genres = (IEnumerable<System.Web.Mvc.SelectListItem>)GetGenres();
+                shoeVm.Colours = (IEnumerable<System.Web.Mvc.SelectListItem>)GetColours();
+                shoeVm.Sports = (IEnumerable<System.Web.Mvc.SelectListItem>)GetSports();
 
                 return View(shoeVm);
             }
