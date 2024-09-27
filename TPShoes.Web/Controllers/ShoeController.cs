@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+
 using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.ViewModels.Shoe;
 using TPShoes.Servicios.Interfaces;
 using X.PagedList.Extensions;
 
-namespace Garden2024.Web.Controllers
+namespace TPShoes.Web.Controllers
 {
     public class ShoeController : Controller
     {
@@ -47,14 +47,11 @@ namespace Garden2024.Web.Controllers
 
         public IActionResult UpSert(int? id)
         {
-            ShoeEditVm ShoeVm;
+            ShoeEditVm shoeEditVm;
             if (id == null || id == 0)
             {
-                ShoeVm = new ShoeEditVm();
-                ShoeVm.Brands = (IEnumerable<System.Web.Mvc.SelectListItem>)GetBrands();
-                ShoeVm.Genres = (IEnumerable<System.Web.Mvc.SelectListItem>)GetGenres();
-                ShoeVm.Colours = (IEnumerable<System.Web.Mvc.SelectListItem>)GetColours();
-                ShoeVm.Sports = (IEnumerable<System.Web.Mvc.SelectListItem>)GetSports();
+                shoeEditVm = new ShoeEditVm();
+                CargarListasCombos(shoeEditVm);
 
             }
             else
@@ -66,15 +63,11 @@ namespace Garden2024.Web.Controllers
                     {
                         return NotFound();
                     }
-                    ShoeVm = _mapper!.Map<ShoeEditVm>(shoe);
-                    ShoeVm.Brands = (IEnumerable<System.Web.Mvc.SelectListItem>)GetBrands();
-                    ShoeVm.Genres = (IEnumerable<System.Web.Mvc.SelectListItem>)GetGenres();
-                    ShoeVm.Colours = (IEnumerable<System.Web.Mvc.SelectListItem>)GetColours();
-                    ShoeVm.Sports = (IEnumerable<System.Web.Mvc.SelectListItem>)GetSports();
+                    shoeEditVm = _mapper!.Map<ShoeEditVm>(shoe);
+                    CargarListasCombos(shoeEditVm);
 
 
-
-                    return View(ShoeVm);
+                    return View(shoeEditVm);
                 }
                 catch (Exception)
                 {
@@ -83,39 +76,32 @@ namespace Garden2024.Web.Controllers
                 }
 
             }
-            return View(ShoeVm);
+            return View(shoeEditVm);
 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult UpSert(ShoeEditVm shoeVm)
+        public IActionResult UpSert(ShoeEditVm shoeEditVm)
         {
             if (!ModelState.IsValid)
             {
-                shoeVm.Brands = (IEnumerable<System.Web.Mvc.SelectListItem>)GetBrands();
-                shoeVm.Genres = (IEnumerable<System.Web.Mvc.SelectListItem>)GetGenres();
-                shoeVm.Colours = (IEnumerable<System.Web.Mvc.SelectListItem>)GetColours();
-                shoeVm.Sports = (IEnumerable<System.Web.Mvc.SelectListItem>)GetSports();
+                CargarListasCombos(shoeEditVm);
 
-
-                return View(shoeVm);
+                return View(shoeEditVm);
             }
 
 
             try
             {
-                Shoe shoe = _mapper!.Map<Shoe>(shoeVm);
+                Shoe shoe = _mapper!.Map<Shoe>(shoeEditVm);
 
                 if (_shoeService!.Existe(shoe))
                 {
                     ModelState.AddModelError(string.Empty, "Record already exist");
-                    shoeVm.Brands = (IEnumerable<System.Web.Mvc.SelectListItem>)GetBrands();
-                    shoeVm.Genres = (IEnumerable<System.Web.Mvc.SelectListItem>)GetGenres();
-                    shoeVm.Colours = (IEnumerable<System.Web.Mvc.SelectListItem>)GetColours();
-                    shoeVm.Sports = (IEnumerable<System.Web.Mvc.SelectListItem>)GetSports();
+                    CargarListasCombos(shoeEditVm);
 
-                    return View(shoeVm);
+                    return View(shoeEditVm);
                 }
 
                 _shoeService.Guardar(shoe);
@@ -126,13 +112,43 @@ namespace Garden2024.Web.Controllers
             {
                 // Log the exception (ex) here as needed
                 ModelState.AddModelError(string.Empty, "An error occurred while editing the record.");
-                shoeVm.Brands = (IEnumerable<System.Web.Mvc.SelectListItem>)GetBrands();
-                shoeVm.Genres = (IEnumerable<System.Web.Mvc.SelectListItem>)GetGenres();
-                shoeVm.Colours = (IEnumerable<System.Web.Mvc.SelectListItem>)GetColours();
-                shoeVm.Sports = (IEnumerable<System.Web.Mvc.SelectListItem>)GetSports();
+                CargarListasCombos(shoeEditVm);
 
-                return View(shoeVm);
+                return View(shoeEditVm);
             }
+        }
+
+        private void CargarListasCombos(ShoeEditVm shoeEditVm)
+        {
+            shoeEditVm.Brands = _brandsService!.GetLista(
+                                        orderBy: o => o.OrderBy(c => c.BrandName))
+                                    .Select(c => new SelectListItem
+                                    {
+                                        Text = c.BrandName,
+                                        Value = c.BrandId.ToString()
+                                    }).ToList();
+            shoeEditVm.Genres = _genreService!.GetLista(
+                                        orderBy: o => o.OrderBy(c => c.GenreName))
+                                    .Select(c => new SelectListItem
+                                    {
+                                        Text = c.GenreName,
+                                        Value = c.GenreId.ToString()
+                                    }).ToList();
+            shoeEditVm.Colours = _colourService!.GetLista(
+                                        orderBy: o => o.OrderBy(c => c.ColourName))
+                                    .Select(c => new SelectListItem
+                                    {
+                                        Text = c.ColourName,
+                                        Value = c.ColourId.ToString()
+                                    }).ToList();
+            shoeEditVm.Sports = _sportService!.GetLista(
+                                        orderBy: o => o.OrderBy(c => c.SportName))
+                                    .Select(c => new SelectListItem
+                                    {
+                                        Text = c.SportName,
+                                        Value = c.SportId.ToString()
+                                    }).ToList();
+            
         }
 
         [HttpDelete]
@@ -167,46 +183,7 @@ namespace Garden2024.Web.Controllers
 
 
 
-        private List<SelectListItem> GetBrands()
-        {
-            return _brandsService!.GetLista(
-                                    orderBy: o => o.OrderBy(c => c.BrandName))
-                                .Select(c => new SelectListItem
-                                {
-                                    Text = c.BrandName,
-                                    Value = c.BrandId.ToString()
-                                }).ToList();
-        }
-        private List<SelectListItem> GetGenres()
-        {
-            return _genreService!.GetLista(
-                                    orderBy: o => o.OrderBy(c => c.GenreName))
-                                .Select(c => new SelectListItem
-                                {
-                                    Text = c.GenreName,
-                                    Value = c.GenreId.ToString()
-                                }).ToList();
-        }
-        private List<SelectListItem> GetColours()
-        {
-            return _colourService!.GetLista(
-                                    orderBy: o => o.OrderBy(c => c.ColourName))
-                                .Select(c => new SelectListItem
-                                {
-                                    Text = c.ColourName,
-                                    Value = c.ColourId.ToString()
-                                }).ToList();
-        }
-        private List<SelectListItem> GetSports()
-        {
-            return _sportService!.GetLista(
-                                    orderBy: o => o.OrderBy(c => c.SportName))
-                                .Select(c => new SelectListItem
-                                {
-                                    Text = c.SportName,
-                                    Value = c.SportId.ToString()
-                                }).ToList();
-        }
+       
 
     }
 }

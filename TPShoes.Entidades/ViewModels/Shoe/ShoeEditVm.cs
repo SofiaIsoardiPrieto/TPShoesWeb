@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
+
 
 
 namespace TPShoes.Entidades.ViewModels.Shoe
@@ -15,22 +15,35 @@ namespace TPShoes.Entidades.ViewModels.Shoe
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccinar un Brand")]
         [DisplayName("Brand")]
         public int BrandId { get; set; }
+        [ValidateNever]
+        public List<SelectListItem> Brands { get; set; } = null!;
+
 
         [Required(ErrorMessage = "Sport es requerido")]
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccinar un Sport")]
         [DisplayName("Sport")]
         public int SportId { get; set; }
+        [ValidateNever]
+        public List<SelectListItem> Sports { get; set; } = null!;
+
 
 
         [Required(ErrorMessage = "Genre es requerido")]
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccinar un Genre")]
         [DisplayName("Genre")]
         public int GenreId { get; set; }
+        [ValidateNever]
+        public List<SelectListItem> Genres { get; set; } = null!;
+
+
 
         [Required(ErrorMessage = "Colour es requerido")]
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccinar un colour")]
         [DisplayName("Colour")]
         public int ColourId { get; set; }
+        [ValidateNever]
+        public List<SelectListItem> Colours { get; set; } = null!;
+
 
 
         [Required(ErrorMessage = "{0} es requerido")]
@@ -49,16 +62,6 @@ namespace TPShoes.Entidades.ViewModels.Shoe
         [DisplayName("Precio")]
         public decimal Price { get; set; }
 
-        [ValidateNever]
-        public IEnumerable<SelectListItem> Brands { get; set; } = null!;
-
-        [ValidateNever]
-        public IEnumerable<SelectListItem> Colours { get; set; } = null!;
-
-        [ValidateNever]
-        public IEnumerable<SelectListItem> Genres { get; set; } = null!;
-
-        [ValidateNever]
-        public IEnumerable<SelectListItem> Sports { get; set; } = null!;
+       
     }
 }

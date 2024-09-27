@@ -10,7 +10,6 @@
     <div class="row mb-3">
         <div class="col-6">
             <h3>Shoe List</h3>
-
         </div>
         <div class="col-6 text-end">
             <a asp-controller="Shoe" asp-action="UpSert" class="btn btn-primary">
@@ -88,7 +87,7 @@
                                 <a class="btn btn-warning" asp-controller="Shoe" asp-action="UpSert" asp-route-id="@item.ShoeId">
                                     <i class="bi bi-pencil-square"></i>&nbsp; Edit
                                 </a>
-                                <a onclick="Delete('/Shoe/Delete/@item.ShoeId',@item.ShoeId,'@item.ShoeId')" class="btn btn-danger">
+                                <a onclick="Delete('/Shoe/Delete/@item.ShoeId',@item.Model,'@item.ShoeId')" class="btn btn-danger">
                                     <i class="bi bi-trash-fill"></i> Delete
                                 </a>
                             </div>
