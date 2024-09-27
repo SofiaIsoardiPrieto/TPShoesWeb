@@ -8,7 +8,7 @@ using X.PagedList.Extensions;
 
 namespace Garden2024.Web.Controllers
 {
-    public class ShoesController : Controller
+    public class ShoeController : Controller
     {
         private readonly IShoesServicio? _shoeService;
         private readonly IBrandsServicio? _brandsService;
@@ -19,7 +19,7 @@ namespace Garden2024.Web.Controllers
 
         private int pageSize = 10;
 
-        public ShoesController(IShoesServicio? shoeService,
+        public ShoeController(IShoesServicio? shoeService,
             IBrandsServicio brandsService,
             IColoursServicio colourService,
             IGenresServicio genreService,

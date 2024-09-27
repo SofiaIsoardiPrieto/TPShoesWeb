@@ -19,25 +19,16 @@ namespace TPShoes.Web.Mapping
             LoadShoeMapping();
             LoadShoeMapping();
         }
-
         private void LoadBrandMapping()
         {
             CreateMap<Brand, BrandListVm>();
             CreateMap<Brand, BrandEditVm>().ReverseMap();
-
-            //CreateMap<City, CityListVm>().
-            //	ForMember(dest => dest.CountryName,
-            //	opt => opt.MapFrom(c => c.Country.CountryName))
-            //	.ForMember(dest => dest.StateName,
-            //	opt => opt.MapFrom(s => s.State.StateName));
-            //CreateMap<City, CityEditVm>();
         }
         private void LoadGenreMapping()
         {
             CreateMap<Genre, GenreListVm>();
             CreateMap<Genre, GenreEditVm>().ReverseMap();
         }
-
         private void LoadColourMapping()
         {
             CreateMap<Colour, ColourListVm>();
@@ -48,11 +39,6 @@ namespace TPShoes.Web.Mapping
         {
             CreateMap<Sport, SportListVm>();
             CreateMap<Sport, SportEditVm>().ReverseMap();
-
-            //CreateMap<State, StateListVm>()
-            //	.ForMember(dest => dest.Country,
-            //	opt => opt.MapFrom(src => src.Country.CountryName));
-            //CreateMap<State, StateEditVm>().ReverseMap();
         }
         private void LoadShoeMapping()
         {
@@ -62,7 +48,6 @@ namespace TPShoes.Web.Mapping
                  .ForMember(dest => dest.Colour, opt => opt.MapFrom(src => src.Colour.ColourName))
              .ForMember(dest => dest.Sport, opt => opt.MapFrom(src => src.Sport.SportName));
             CreateMap<Shoe, ShoeEditVm>().ReverseMap();
-
         }
     }
 }
