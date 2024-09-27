@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.ViewModels.Shoe;
 using TPShoes.Servicios.Interfaces;
-using X.PagedList.Extensions;
+using X.PagedList;
+
 
 namespace TPShoes.Web.Controllers
 {
@@ -77,7 +78,6 @@ namespace TPShoes.Web.Controllers
 
             }
             return View(shoeEditVm);
-
         }
 
         [HttpPost]
@@ -87,7 +87,6 @@ namespace TPShoes.Web.Controllers
             if (!ModelState.IsValid)
             {
                 CargarListasCombos(shoeEditVm);
-
                 return View(shoeEditVm);
             }
 

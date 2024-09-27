@@ -1,16 +1,13 @@
-﻿using System.Diagnostics;
-using System.Linq.Expressions;
-using System.Web.Mvc;
+﻿using System.Linq.Expressions;
 using TPShoes.Datos;
 using TPShoes.Datos.Interfaces;
 using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.Dtos;
-using TPShoes.Entidades.Enum;
 using TPShoes.Servicios.Interfaces;
 
 namespace TPShoes.Servicios.Servicios
 {
-	public class ShoesServicio : IShoesServicio
+    public class ShoesServicio : IShoesServicio
     {
         private readonly IRepositorioShoes _repository;
         private readonly IUnitOfWork _unitOfWork;
@@ -19,11 +16,11 @@ namespace TPShoes.Servicios.Servicios
         public ShoesServicio(IRepositorioShoes repository, IUnitOfWork unitOfWork)
         {
             _repository = repository ?? throw new ArgumentException("Error en la dependencia");
-			_unitOfWork = unitOfWork ?? throw new ArgumentException("Error en la dependencia");
-			//_proveedorRepository = proveedorRepository;
-		}
+            _unitOfWork = unitOfWork ?? throw new ArgumentException("Error en la dependencia");
+            //_proveedorRepository = proveedorRepository;
+        }
 
-      
+
         public void Borrar(Shoe shoe)
         {
             try
@@ -58,7 +55,7 @@ namespace TPShoes.Servicios.Servicios
                 throw new Exception("Habilita el servidor!.", ex);
             }
         }
-       
+
 
         public IEnumerable<IGrouping<int, Shoe>> GetShoesAgrupadosPorGenre()
         {
@@ -139,7 +136,7 @@ namespace TPShoes.Servicios.Servicios
             }
         }
 
-      
+
 
         public void AsignarSizeAShoe(Shoe shoe, Size size)
         {
@@ -151,7 +148,7 @@ namespace TPShoes.Servicios.Servicios
                 // Crear una nueva relación entre la shoe y el size
                 SizeShoe nuevoSizeShoe = new SizeShoe
                 {
-                    
+
                     Shoe = shoe,
                     Size = size
                 };
@@ -202,12 +199,12 @@ namespace TPShoes.Servicios.Servicios
         {
             return _repository!.GetAll(filter, orderBy, propertiesNames);
         }
-       
+
         public Shoe? GetShoePorId(Expression<Func<Shoe, bool>>? filter = null, string? propertiesNames = null, bool tracked = true)
         {
             return _repository!.Get(filter, propertiesNames, tracked);
         }
-      
+
 
         public bool EstaRelacionado(int shoeId)
         {

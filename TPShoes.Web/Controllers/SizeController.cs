@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.ViewModels.Size;
 using TPShoes.Servicios.Interfaces;
-using X.PagedList.Extensions;
+using X.PagedList;
 
 namespace TPShoes.Web.Controllers
 {
