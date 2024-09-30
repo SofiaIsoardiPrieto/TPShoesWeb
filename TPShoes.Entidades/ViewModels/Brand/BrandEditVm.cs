@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace TPShoes.Entidades.ViewModels.Brand
@@ -11,6 +12,15 @@ namespace TPShoes.Entidades.ViewModels.Brand
         [DisplayName("Nombre Brand")]
         public string BrandName { get; set; } = null!;
 
+         // para sumar imagenes
+
+        [Display(Name = "Image")]
+        public string? ImageUrl { get; set; }
+
+        public IFormFile? ImageFile { get; set; }  // Propiedad para la imagen
+
+        [Display(Name = "Remove Image")]
+        public bool RemoveImage { get; set; }  // Propiedad para borrar imagen cargada
 
     }
 }

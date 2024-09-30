@@ -1,5 +1,5 @@
 ﻿﻿
-@model IPagedList<ShoeListVm>
+@model ShoeFilterVm
 @using X.PagedList
 @using X.PagedList.Mvc.Core
 @{
@@ -70,9 +70,9 @@
             </tr>
         </thead>
         <tbody>
-            @if (Model.Any())
+            @if (Model.Shoes.Any())
             {
-                foreach (var item in Model)
+                foreach (var item in Model.Shoes)
                 {
                     <tr id="@item.ShoeId">
                         <td>@item.Brand</td>
@@ -87,7 +87,7 @@
                                 <a class="btn btn-warning" asp-controller="Shoe" asp-action="UpSert" asp-route-id="@item.ShoeId">
                                     <i class="bi bi-pencil-square"></i>&nbsp; Edit
                                 </a>
-                                <a onclick="Delete('/Shoe/Delete/@item.ShoeId',@item.Model,'@item.ShoeId')" class="btn btn-danger">
+                                <a onclick="Delete('/Shoe/Delete/@item.ShoeId',@item.ShoeId,'@item.Model')" class="btn btn-danger">
                                     <i class="bi bi-trash-fill"></i> Delete
                                 </a>
                             </div>
@@ -103,7 +103,7 @@
             }
         </tbody>
     </table>
-    <partial name="_Pager" model="@Model" />
+    <partial name="_Pager" model="@Model.Shoes" />
 
 
 </div>

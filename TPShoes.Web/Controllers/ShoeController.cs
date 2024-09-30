@@ -16,6 +16,7 @@ namespace TPShoes.Web.Controllers
         private readonly IColoursServicio? _colourService;
         private readonly IGenresServicio? _genreService;
         private readonly ISportsServicio? _sportService;
+        private readonly ISizesServicio? _sizeService;
         private readonly IMapper? _mapper;
 
         private int pageSize = 10;
@@ -24,7 +25,7 @@ namespace TPShoes.Web.Controllers
             IBrandsServicio brandsService,
             IColoursServicio colourService,
             IGenresServicio genreService,
-            ISportsServicio sportService,
+            ISportsServicio sportService, ISizesServicio sizeService,
             IMapper? mapper)
         {
             _shoeService = shoeService ?? throw new ApplicationException("Dependencies not set");
@@ -32,20 +33,50 @@ namespace TPShoes.Web.Controllers
             _colourService = colourService ?? throw new ApplicationException("Dependencies not set");
             _genreService = genreService ?? throw new ApplicationException("Dependencies not set");
             _sportService = sportService ?? throw new ApplicationException("Dependencies not set");
+            _sizeService = sizeService ?? throw new ApplicationException("Dependencies not set");
             _mapper = mapper ?? throw new ApplicationException("Dependencies not set");
         }
 
-        public IActionResult Index(int? page)
+        public IActionResult Index(int? page, int? filterId, int pageSize = 10, bool viewAll = false)
         {
             var currentPage = page ?? 1;
-            var ShoeList = _shoeService?
-                    .GetLista(
-                        orderBy: o => o.OrderBy(s => s.Model),
-                        propertiesNames: "Brand,Genre,Colour,Sport");//????
-            var shoeListVm = _mapper?.Map<List<ShoeListVm>>(ShoeList);
-            return View(shoeListVm?.ToPagedList(currentPage, pageSize));
-        }
+            ViewBag.currentPageSize = pageSize;
+            ViewBag.currentFilterId = filterId;
+            IEnumerable<Shoe>? shoes;
+            if (filterId is null || viewAll)
+            {
+                shoes = _shoeService?.GetLista(
+                    orderBy: o => o.OrderBy(p => p.Model),
+                   propertiesNames: "Brand,Genre,Colour,Sport");
+            }
+            else
+            {
+                shoes = _shoeService?.GetLista(
+                    orderBy: o => o.OrderBy(p => p.Model),
+                    filter: p => p.ShoeId == filterId,
+                    propertiesNames: "Brand,Genre,Colour,Sport");
+            }
+            var shoeListVm = _mapper?
+                .Map<List<ShoeListVm>>(shoes);
 
+
+            var shoeFilterVm = new ShoeFilterVm()
+            {
+                Shoes = shoeListVm?.ToPagedList(currentPage, pageSize),
+                Sizes = GetSizes()
+            };
+            return View(shoeFilterVm);
+        }
+        private List<SelectListItem> GetSizes()
+        {
+            return _sizeService!.GetLista(
+                    orderBy: o => o.OrderBy(c => c.SizeNumber))!
+                .Select(c => new SelectListItem
+                {
+                    Text = c.SizeNumber.ToString(),
+                    Value = c.SizeId.ToString()
+                }).ToList();
+        }
         public IActionResult UpSert(int? id)
         {
             ShoeEditVm shoeEditVm;
@@ -147,7 +178,7 @@ namespace TPShoes.Web.Controllers
                                         Text = c.SportName,
                                         Value = c.SportId.ToString()
                                     }).ToList();
-            
+
         }
 
         [HttpDelete]
@@ -182,7 +213,7 @@ namespace TPShoes.Web.Controllers
 
 
 
-       
+
 
     }
 }
