@@ -7,5 +7,6 @@ namespace TPShoes.Entidades.ViewModels.Brand
         public int BrandId { get; set; }
         [DisplayName("Brand")]
         public string BrandName { get; set; } = null!;
+        public int CantShoes { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.ViewModels.Shoe;
+using TPShoes.Entidades.ViewModels.Size;
 using TPShoes.Servicios.Interfaces;
 using X.PagedList;
 
@@ -12,7 +13,7 @@ namespace TPShoes.Web.Controllers
     public class ShoeController : Controller
     {
         private readonly IShoesServicio? _shoeService;
-        private readonly IBrandsServicio? _brandsService;
+        private readonly IBrandsServicio? _brandService;
         private readonly IColoursServicio? _colourService;
         private readonly IGenresServicio? _genreService;
         private readonly ISportsServicio? _sportService;
@@ -22,14 +23,14 @@ namespace TPShoes.Web.Controllers
         private int pageSize = 10;
 
         public ShoeController(IShoesServicio? shoeService,
-            IBrandsServicio brandsService,
+            IBrandsServicio brandService,
             IColoursServicio colourService,
             IGenresServicio genreService,
             ISportsServicio sportService, ISizesServicio sizeService,
             IMapper? mapper)
         {
             _shoeService = shoeService ?? throw new ApplicationException("Dependencies not set");
-            _brandsService = brandsService ?? throw new ApplicationException("Dependencies not set");
+            _brandService = brandService ?? throw new ApplicationException("Dependencies not set");
             _colourService = colourService ?? throw new ApplicationException("Dependencies not set");
             _genreService = genreService ?? throw new ApplicationException("Dependencies not set");
             _sportService = sportService ?? throw new ApplicationException("Dependencies not set");
@@ -37,46 +38,103 @@ namespace TPShoes.Web.Controllers
             _mapper = mapper ?? throw new ApplicationException("Dependencies not set");
         }
 
-        public IActionResult Index(int? page, int? filterId, int pageSize = 10, bool viewAll = false)
+        public IActionResult Index(int? page, string? searchTerm = null, int? FilterBrandId = null, int? FilterColorId = null, int? FilterGenreId = null, int? FilterSportId = null, int pageSize = 10, bool viewAll = false, string orderBY = "Brand")
         {
-            var currentPage = page ?? 1;
+            int pagenumber = page ?? 1;
             ViewBag.currentPageSize = pageSize;
-            ViewBag.currentFilterId = filterId;
-            IEnumerable<Shoe>? shoes;
-            if (filterId is null || viewAll)
+            ViewBag.currentsearchTerm = searchTerm; //Un viewBag es como una variable de la vista que se usa en la vista para no ensuciar más el modelo de mi vista
+            ViewBag.currentFilterBrandId = FilterBrandId;
+            ViewBag.currentFilterColorId = FilterColorId;
+            ViewBag.currentFilterGenreId = FilterGenreId;
+            ViewBag.currentFilterSportId = FilterSportId;
+            ViewBag.currentOrderBy = orderBY;
+            IEnumerable<Shoe> shoes;
+            if (!viewAll)
             {
-                shoes = _shoeService?.GetLista(
-                    orderBy: o => o.OrderBy(p => p.Model),
-                   propertiesNames: "Brand,Genre,Colour,Sport");
+                if (!string.IsNullOrEmpty(searchTerm) || FilterBrandId != null || FilterColorId != null || FilterGenreId != null || FilterSportId != null)
+                {
+                    if (searchTerm != null && FilterBrandId == null && FilterColorId == null && FilterGenreId == null && FilterSportId == null)
+                    {
+                        FilterBrandId = null;
+                        FilterColorId = null;
+                        FilterGenreId = null;
+                        FilterSportId = null;
+                        ViewBag.currentFilterBrandId = FilterBrandId;
+                        ViewBag.currentFilterColorId = FilterColorId;
+                        ViewBag.currentFilterGenreId = FilterGenreId;
+                        ViewBag.currentFilterSportId = FilterSportId;
+                        //Hay que escribir las propiedades como estan en la entidad
+                        shoes = _shoeService!.GetLista(propertiesNames: "Sport,Brand,Colour,Genre", orderBy: o => o.OrderBy(c => c.Price),
+                                    filter: f => f.Brand!.BrandName.Contains(searchTerm!) || f.Colour!.ColourName.Contains(searchTerm) || f.Sport!.SportName.Contains(searchTerm) ||
+                                    f.Genre!.GenreName.Contains(searchTerm))!;
+                    }
+                    else
+                    {
+                        searchTerm = string.Empty;
+                        ViewBag.currentsearchTerm = searchTerm;
+                        shoes = _shoeService!.GetLista(propertiesNames: "Sport,Brand,Colour,Genre", orderBy: o => o.OrderBy(order => order.Price),
+                            filter: f => f.BrandId == FilterBrandId || f.ColourId == FilterColorId || f.GenreId == FilterGenreId || f.SportId == FilterSportId)!;
+                    }
+
+                }
+                else
+                {
+                    shoes = _shoeService!.GetLista(orderBy: o => o.OrderBy(b => b.Price), propertiesNames: "Sport,Brand,Colour,Genre")!;
+                }
             }
             else
             {
-                shoes = _shoeService?.GetLista(
-                    orderBy: o => o.OrderBy(p => p.Model),
-                    filter: p => p.ShoeId == filterId,
-                    propertiesNames: "Brand,Genre,Colour,Sport");
+                searchTerm = string.Empty;
+                FilterBrandId = null;
+                FilterColorId = null;
+                FilterGenreId = null;
+                FilterSportId = null;
+                ViewBag.currentsearchTerm = searchTerm;
+                ViewBag.currentFilterBrandId = FilterBrandId;
+                ViewBag.currentFilterColorId = FilterColorId;
+                ViewBag.currentFilterGenreId = FilterGenreId;
+                ViewBag.currentFilterSportId = FilterSportId;
+                shoes = _shoeService!.GetLista(orderBy: o => o.OrderBy(b => b.Price), propertiesNames: "Sport,Brand,Colour,Genre")!;
             }
-            var shoeListVm = _mapper?
-                .Map<List<ShoeListVm>>(shoes);
 
-
-            var shoeFilterVm = new ShoeFilterVm()
+            var shoeListVm = _mapper?.Map<IEnumerable<ShoeListVm>>(shoes).ToList();
+            if (orderBY == "Brand")
             {
-                Shoes = shoeListVm?.ToPagedList(currentPage, pageSize),
-                Sizes = GetSizes()
+                shoeListVm = shoeListVm!.OrderBy(o => o.Brand).ToList();
+            }
+            if (orderBY == "Colour")
+            {
+                shoeListVm = shoeListVm!.OrderBy(o => o.Colour).ToList();
+            }
+            if (orderBY == "Genre")
+            {
+                shoeListVm = shoeListVm!.OrderBy(o => o.Genre).ToList();
+            }
+            if (orderBY == "Sport")
+            {
+                shoeListVm = shoeListVm!.OrderBy(o => o.Sport).ToList();
+            }
+            var shoeFilterVM = new ShoeFilterVm()
+            {
+                Shoes = shoeListVm!.ToPagedList(pagenumber, pageSize),
+                Brands = _brandService!.GetLista(orderBy: o => o.OrderBy(order => order.BrandName))!.Select(s => new SelectListItem { Text = s.BrandName, Value = s.BrandId.ToString() }).ToList(),
+                Genres = _genreService!.GetLista(orderBy: o => o.OrderBy(order => order.GenreName))!.Select(s => new SelectListItem { Text = s.GenreName, Value = s.GenreId.ToString() }).ToList(),
+                Colours = _colourService!.GetLista(orderBy: o => o.OrderBy(order => order.ColourName))!.Select(s => new SelectListItem { Text = s.ColourName, Value = s.ColourId.ToString() }).ToList(),
+                Sports = _sportService!.GetLista(orderBy: o => o.OrderBy(order => order.SportName))!.Select(s => new SelectListItem { Text = s.SportName, Value = s.SportId.ToString() }).ToList(),
+
             };
-            return View(shoeFilterVm);
+            return View(shoeFilterVM);
         }
-        private List<SelectListItem> GetSizes()
-        {
-            return _sizeService!.GetLista(
-                    orderBy: o => o.OrderBy(c => c.SizeNumber))!
-                .Select(c => new SelectListItem
-                {
-                    Text = c.SizeNumber.ToString(),
-                    Value = c.SizeId.ToString()
-                }).ToList();
-        }
+        //private List<SelectListItem> GetSizes()
+        //{
+        //    return _sizeService!.GetLista(
+        //            orderBy: o => o.OrderBy(c => c.SizeNumber))!
+        //        .Select(c => new SelectListItem
+        //        {
+        //            Text = c.SizeNumber.ToString(),
+        //            Value = c.SizeId.ToString()
+        //        }).ToList();
+        //}
         public IActionResult UpSert(int? id)
         {
             ShoeEditVm shoeEditVm;
@@ -150,7 +208,7 @@ namespace TPShoes.Web.Controllers
 
         private void CargarListasCombos(ShoeEditVm shoeEditVm)
         {
-            shoeEditVm.Brands = _brandsService!.GetLista(
+            shoeEditVm.Brands = _brandService!.GetLista(
                                         orderBy: o => o.OrderBy(c => c.BrandName))
                                     .Select(c => new SelectListItem
                                     {

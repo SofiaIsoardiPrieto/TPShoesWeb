@@ -8,7 +8,11 @@
     new { page ,
             searchTerm=ViewBag.currentSearchTerm,
             pageSize=ViewBag.currentPageSize,
-            filterId=ViewBag.currentFilterId
+            FilterBrandId = ViewBag.currentFilterBrandId,
+            FilterColourId = ViewBag.currentFilterColourId,
+            FilterGenreId = ViewBag.currentFilterGenreId,
+            FilterSportId = ViewBag.currentFilterSportId,
+            orderBY=ViewBag.currentOrderBy
     }), new PagedListRenderOptions
 {
     UlElementClasses = new[] { "pagination" },

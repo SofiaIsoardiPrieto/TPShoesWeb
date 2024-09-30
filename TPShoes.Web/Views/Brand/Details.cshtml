@@ -1,32 +1,31 @@
 ﻿﻿
-@model IPagedList<BrandListVm>
+@model IEnumerable<ShoeListVm>
 @using X.PagedList
-
+@using X.PagedList.Mvc.Core
 @{
-    ViewData["Title"] = "Brand List";
+    ViewData["Title"] = "Shoe List";
 }
 <div class="container">
     @Html.AntiForgeryToken()
     <div class="row mb-3">
         <div class="col-6">
-            <h3>Brand List</h3>
-
-        </div>
+            <h3>Shoe List de: @Model.ElementAt(0).Brand</h3>
+        </div>      
         <div class="col-6 text-end">
-            <a asp-controller="Brand" asp-action="UpSert" class="btn btn-primary">
+            <a asp-controller="Brand" asp-action="Index" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i>
-                Nuevo
+                Volver
             </a>
         </div>
     </div>
-    <form method="get" class="form-inline" asp-action="Index">
+   @*  <form method="get" class="form-inline" asp-action="Index">
         <div class="d-flex flex-row align-items-center">
             <div class="col-auto mx-1">
                 <label for="pageSize">Show:</label>
             </div>
             <div class="col-auto mx-2">
                 <select class="form-select" id="pageSize" name="pageSize" onchange="this.form.submit()" style="width:70px">
-                    @{
+                    
                         var options = new List<int> { 5, 10, 15, 20 };
                         foreach (var option in options)
                         {
@@ -43,7 +42,7 @@
                         }
                     }
                 </select>
-            </div>
+            </div> 
             <div class="col-auto mx-2" style="width: 200px;">
                 <input type="text" name="searchTerm" id="searchTerm" class="form-control" placeholder="Search by..." value="@ViewBag.currentSearchTerm" />
             </div>
@@ -56,13 +55,18 @@
                 </button>
             </div>
         </div>
-    </form>
+    </form> *@
     <table class="table table-bordered table-hover">
         <thead>
             <tr>
-                <th>Brand</th>
-                 <th>Cantidad Shoes</th>
-                <th>Actions</th>
+             
+                <th>Genre</th>
+                <th>Colour</th>
+                <th>Sport</th>
+                <th>Model</th>
+                <th>Description</th>
+                <th>Price</th>
+               
             </tr>
         </thead>
         <tbody>
@@ -70,44 +74,26 @@
             {
                 foreach (var item in Model)
                 {
-                    <tr id="@item.BrandId">
-                        <td>
-                            @item.BrandName
-
-                        </td>
-                        <td>
-                            @item.CantShoes
-
-                        </td>
-                        <td>
-                            <a class="btn btn-warning" asp-controller="Brand" asp-action="UpSert" asp-route-id="@item.BrandId">
-                                <i class="bi bi-pencil-square"></i>&nbsp;
-                                Edit
-                            </a>
-                            <a onclick="Delete('/Brand/Delete/@item.BrandId',@item.BrandId,'@item.BrandName')" class="btn btn-danger">
-                                <i class="bi bi-trash-fill"></i>
-                                Delete
-                            </a>
-                            <a class="btn btn-info" asp-controller="Brand" asp-action="Details" asp-route-id="@item.BrandId" style="background-color:aqua">
-                                Details
-                            </a>
-                        </td>
+                    <tr id="@item.ShoeId">
+                        
+                        <td>@item.Genre</td>
+                        <td>@item.Colour</td>
+                        <td>@item.Sport</td>
+                        <td>@item.Model</td>
+                        <td>@item.Description</td>
+                        <td>@item.Price</td>   
                     </tr>
                 }
             }
             else
             {
                 <tr>
-                    <td colspan="2" class="text-center">
-                       No Brands added yet!
-
-                    </td>
+                    <td colspan="8" class="text-center">No Shoes added yet!</td>
                 </tr>
-
             }
         </tbody>
     </table>
-    <partial name="_Pager" model="@Model" />
+ @*    <partial name="_Pager" model="@Model" /> *@
 
 
 </div>
