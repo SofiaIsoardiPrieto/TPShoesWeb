@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TPShoes.Entidades.Clases;
+using TPShoes.Entidades.ViewModels.Brand;
+using TPShoes.Entidades.ViewModels.Shoe;
 using TPShoes.Entidades.ViewModels.Size;
 using TPShoes.Servicios.Interfaces;
 using X.PagedList;
@@ -10,10 +12,14 @@ namespace TPShoes.Web.Controllers
     public class SizeController : Controller
     {
         private readonly ISizesServicio? _serviciosSize;
+        private readonly ISizeShoesServicio? _serviciosSizeShoe;
+        private readonly IShoesServicio? _serviciosShoe;
         private readonly IMapper? _mapper;
-        public SizeController(ISizesServicio? servicios, IMapper mapper)
+        public SizeController(ISizesServicio? serviciosSize, ISizeShoesServicio? serviciosSizeShoe, IShoesServicio? serviciosShoe, IMapper mapper)
         {
-            _serviciosSize = servicios ?? throw new ApplicationException("Dependencies not set");
+            _serviciosSize = serviciosSize ?? throw new ApplicationException("Dependencies not set");
+            _serviciosSizeShoe = serviciosSizeShoe ?? throw new ApplicationException("Dependencies not set");
+            _serviciosShoe = serviciosShoe ?? throw new ApplicationException("Dependencies not set");
             _mapper = mapper ?? throw new ApplicationException("Dependencies not set");
         }
 
@@ -42,11 +48,50 @@ namespace TPShoes.Web.Controllers
                 Sizes = _serviciosSize?
                     .GetLista(orderBy: o => o.OrderBy(c => c.SizeNumber));
             }
-            var SizeVm = _mapper?.Map<List<SizeListVm>>(Sizes)
+            var SizeListVm = _mapper?.Map<List<SizeListVm>>(Sizes)
                .ToPagedList(pageNumber, pageSize);
-
-            return View(SizeVm);
+            foreach (var item in SizeListVm)
+            {
+                item.CantShoes = _serviciosSizeShoe.GetListaShoeDtoPorSize(item.SizeId).Count;
+            }
+            return View(SizeListVm);
         }
+
+        public IActionResult Details(int? id)
+        {
+            if (id is null || id == 0)
+            {
+                return NotFound();
+            }
+            try
+            {
+                if (_serviciosSize == null || _mapper == null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Dependencias no están configuradas correctamente");
+                }
+                Size? size = _serviciosSize?.GetSizePorId(id.Value);
+
+                if (size is null)
+                {
+                    return NotFound();
+                }
+                var shoeList = _serviciosSizeShoe.GetListaShoePorSize(id.Value);
+
+                var shoeListVm = _mapper?.Map<IEnumerable<ShoeListVm>>(shoeList).ToList();
+
+
+                return View(shoeListVm);
+            }
+            catch (Exception)
+            {
+
+                return Json(new { success = false, message = "Couldn't delete record!!! " }); ;
+
+            }
+
+        }
+
+
     }
 
 }

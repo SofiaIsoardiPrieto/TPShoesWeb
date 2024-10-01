@@ -4,6 +4,7 @@ using TPShoes.Entidades.ViewModels.Brand;
 using TPShoes.Entidades.ViewModels.Colour;
 using TPShoes.Entidades.ViewModels.Genre;
 using TPShoes.Entidades.ViewModels.Shoe;
+using TPShoes.Entidades.ViewModels.Size;
 using TPShoes.Entidades.ViewModels.Sport;
 
 namespace TPShoes.Web.Mapping
@@ -17,8 +18,21 @@ namespace TPShoes.Web.Mapping
             LoadColourMapping();
             LoadSportMapping();
             LoadShoeMapping();
-            LoadShoeMapping();
+            LoadSizeShoeMapping();
+            LoadSizeMapping();
         }
+
+        private void LoadSizeShoeMapping()
+        {
+
+        }
+
+        private void LoadSizeMapping()
+        {
+            CreateMap<Size, SizeListVm>();
+
+        }
+
         private void LoadBrandMapping()
         {
             CreateMap<Brand, BrandListVm>();

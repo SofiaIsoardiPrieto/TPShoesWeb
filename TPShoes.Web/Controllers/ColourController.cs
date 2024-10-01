@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.ViewModels.Colour;
+using TPShoes.Entidades.ViewModels.Shoe;
 using TPShoes.Servicios.Interfaces;
 using X.PagedList;
 
@@ -10,10 +11,12 @@ namespace TPShoes.Web.Controllers
     public class ColourController : Controller
     {
         private readonly IColoursServicio? _serviciosColour;
+        private readonly IShoesServicio? _serviciosShoe;
         private readonly IMapper? _mapper;
-        public ColourController(IColoursServicio? servicios, IMapper mapper)
+        public ColourController(IColoursServicio? servicios, IShoesServicio? serviciosShoe, IMapper mapper)
         {
             _serviciosColour = servicios ?? throw new ApplicationException("Dependencies not set");
+            _serviciosShoe = serviciosShoe ?? throw new ApplicationException("Dependencies not set");
             _mapper = mapper ?? throw new ApplicationException("Dependencies not set");
         }
 
@@ -42,10 +45,13 @@ namespace TPShoes.Web.Controllers
                 colours = _serviciosColour?
                     .GetLista(orderBy: o => o.OrderBy(c => c.ColourName));
             }
-            var colourVm = _mapper?.Map<List<ColourListVm>>(colours)
+            var colourListVm = _mapper?.Map<List<ColourListVm>>(colours)
                .ToPagedList(pageNumber, pageSize);
-
-            return View(colourVm);
+            foreach (var item in colourListVm)
+            {
+                item.CantShoes = _serviciosShoe.GetCantidad(b => b.ColourId == item.ColourId);
+            }
+            return View(colourListVm);
         }
         public IActionResult UpSert(int? id)
         {
@@ -149,6 +155,39 @@ namespace TPShoes.Web.Controllers
                 return Json(new { success = false, message = "Couldn't delete record!!! " }); ;
 
             }
+        }
+
+        public IActionResult Details(int? id)
+        {
+            if (id is null || id == 0)
+            {
+                return NotFound();
+            }
+            try
+            {
+                if (_serviciosColour == null || _mapper == null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Dependencias no están configuradas correctamente");
+                }
+                Colour? colour = _serviciosColour?.GetColourPorId(filter: c => c.ColourId == id.Value);
+
+                if (colour is null)
+                {
+                    return NotFound();
+                }
+                var shoeList = _serviciosShoe.GetLista(filter: b => b.ColourId == colour.ColourId, propertiesNames: "Brand,Genre,Colour,Sport");
+                var shoeListVm = _mapper?.Map<IEnumerable<ShoeListVm>>(shoeList).ToList();
+
+
+                return View(shoeListVm);
+            }
+            catch (Exception)
+            {
+
+                return Json(new { success = false, message = "Couldn't delete record!!! " }); ;
+
+            }
+
         }
 
     }

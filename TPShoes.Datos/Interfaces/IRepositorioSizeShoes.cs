@@ -29,6 +29,6 @@ namespace TPShoes.Datos.Interfaces
         void EditarSizeShoe(SizeShoe sizeShoe);
         SizeShoe GetSizeShoePorId(int shoeId, int sizeId);
         List<ShoeDto> GetListaShoeDtoPorSize(int sizeIdSeleccionado);
-       
+        List<Shoe> GetListaShoePorSize(int value);
     }
 }

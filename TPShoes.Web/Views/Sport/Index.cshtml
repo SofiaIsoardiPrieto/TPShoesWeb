@@ -1,7 +1,8 @@
 ﻿﻿
+﻿
 @model IPagedList<SportListVm>
 @using X.PagedList
-@using X.PagedList.Mvc.Core
+
 @{
     ViewData["Title"] = "Sport List";
 }
@@ -60,8 +61,9 @@
     <table class="table table-bordered table-hover">
         <thead>
             <tr>
-                <th style="width:50%">Sport</th>
-                <th style="width:25%">Actions</th>
+                <th>Sport</th>
+                <th>Cantidad Shoes</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -75,6 +77,10 @@
 
                         </td>
                         <td>
+                            @item.CantShoes
+
+                        </td>
+                        <td>
                             <a class="btn btn-warning" asp-controller="Sport" asp-action="UpSert" asp-route-id="@item.SportId">
                                 <i class="bi bi-pencil-square"></i>&nbsp;
                                 Edit
@@ -82,6 +88,9 @@
                             <a onclick="Delete('/Sport/Delete/@item.SportId',@item.SportId,'@item.SportName')" class="btn btn-danger">
                                 <i class="bi bi-trash-fill"></i>
                                 Delete
+                            </a>
+                            <a class="btn btn-info" asp-controller="Sport" asp-action="Details" asp-route-id="@item.SportId" style="background-color:aqua">
+                                Details
                             </a>
                         </td>
                     </tr>

@@ -7,5 +7,6 @@ namespace TPShoes.Entidades.ViewModels.Genre
         public int GenreId { get; set; }
         [DisplayName("Genre")]
         public string GenreName { get; set; } = null!;
+        public int CantShoes { get; set; }
     }
 }

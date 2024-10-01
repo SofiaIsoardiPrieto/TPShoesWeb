@@ -211,5 +211,27 @@ namespace TPShoes.Datos.Repositorios
                 .Any(pp => pp.ShoeId == shoe.ShoeId
                 && pp.SizeId == size.SizeId);
         }
+
+        public List<Shoe> GetListaShoePorSize(int value)
+        {
+
+
+            var shoes = _db.SizeShoes
+                .Include(ss => ss.Shoe) // Incluir la entidad relacionada Shoe
+                    .ThenInclude(s => s.Brand) // Incluir la entidad relacionada Brand
+                .Include(ss => ss.Shoe)
+                    .ThenInclude(s => s.Colour) // Incluir la entidad relacionada Colour
+                .Include(ss => ss.Shoe)
+                    .ThenInclude(s => s.Genre) // Incluir la entidad relacionada Genre
+                .Include(ss => ss.Shoe)
+                    .ThenInclude(s => s.Sport) // Incluir la entidad relacionada Sport
+                .Where(ss => ss.SizeId == value)
+                .Select(ss => ss.Shoe)
+                .Distinct() // Eliminar duplicados si un Shoe tiene más de un Size relacionado
+                .AsNoTracking()
+                .ToList();
+
+            return shoes;
+        }
     }
 }

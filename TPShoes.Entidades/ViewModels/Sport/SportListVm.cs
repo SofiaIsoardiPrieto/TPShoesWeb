@@ -7,5 +7,9 @@ namespace TPShoes.Entidades.ViewModels.Sport
         public int SportId { get; set; }
         [DisplayName("Sport")]
         public string SportName { get; set; } = null!;
+
+        public int CantShoes { get; set; }
+
+
     }
 }

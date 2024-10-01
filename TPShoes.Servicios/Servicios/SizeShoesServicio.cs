@@ -228,5 +228,10 @@ namespace TPShoes.Servicios.Servicios
         {
             return _repository.ExisteRelacion(shoe, size);
         }
+
+        public List<Shoe> GetListaShoePorSize(int value)
+        {
+            return _repository.GetListaShoePorSize(value);
+        }
     }
 }

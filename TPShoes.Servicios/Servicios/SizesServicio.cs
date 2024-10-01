@@ -115,8 +115,9 @@ namespace TPShoes.Servicios.Servicios
 
 		public Size GetSizePorId(int sizeId)
 		{
-			throw new NotImplementedException();
-		}
+			return _repository.GetSizePorId(sizeId);
+
+        }
 
 		public List<SizeShoeDto>? GetSizeShoeDtoPorId(int shoeId)
 		{

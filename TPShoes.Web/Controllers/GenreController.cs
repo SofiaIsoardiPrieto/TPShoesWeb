@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TPShoes.Entidades.Clases;
+using TPShoes.Entidades.ViewModels.Brand;
 using TPShoes.Entidades.ViewModels.Genre;
+using TPShoes.Entidades.ViewModels.Shoe;
 using TPShoes.Servicios.Interfaces;
 using X.PagedList;
 
@@ -10,10 +12,12 @@ namespace TPShoes.Web.Controllers
     public class GenreController : Controller
     {
         private readonly IGenresServicio? _serviciosGenre;
+        private readonly IShoesServicio? _serviciosShoe;
         private readonly IMapper? _mapper;
-        public GenreController(IGenresServicio? servicios, IMapper mapper)
+        public GenreController(IGenresServicio? servicios, IShoesServicio? serviciosShoe, IMapper mapper)
         {
             _serviciosGenre = servicios ?? throw new ApplicationException("Dependencies not set");
+            _serviciosShoe = serviciosShoe ?? throw new ApplicationException("Dependencies not set");
             _mapper = mapper ?? throw new ApplicationException("Dependencies not set");
         }
 
@@ -42,10 +46,13 @@ namespace TPShoes.Web.Controllers
                 genres = _serviciosGenre?
                     .GetLista(orderBy: o => o.OrderBy(c => c.GenreName));
             }
-            var genreVm = _mapper?.Map<List<GenreListVm>>(genres)
+            var genreListVm = _mapper?.Map<List<GenreListVm>>(genres)
                .ToPagedList(pageNumber, pageSize);
-
-            return View(genreVm);
+            foreach (var item in genreListVm)
+            {
+                item.CantShoes = _serviciosShoe.GetCantidad(b => b.GenreId == item.GenreId);
+            }
+            return View(genreListVm);
         }
         public IActionResult UpSert(int? id)
         {
@@ -149,6 +156,39 @@ namespace TPShoes.Web.Controllers
                 return Json(new { success = false, message = "Couldn't delete record!!! " }); ;
 
             }
+        }
+
+        public IActionResult Details(int? id)
+        {
+            if (id is null || id == 0)
+            {
+                return NotFound();
+            }
+            try
+            {
+                if (_serviciosGenre == null || _mapper == null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Dependencias no están configuradas correctamente");
+                }
+                Genre? genre = _serviciosGenre?.GetGenrePorId(filter: c => c.GenreId == id.Value);
+
+                if (genre is null)
+                {
+                    return NotFound();
+                }
+                var shoeList = _serviciosShoe.GetLista(filter: b => b.GenreId == genre.GenreId, propertiesNames: "Brand,Genre,Colour,Sport");
+                var shoeListVm = _mapper?.Map<IEnumerable<ShoeListVm>>(shoeList).ToList();
+
+
+                return View(shoeListVm);
+            }
+            catch (Exception)
+            {
+
+                return Json(new { success = false, message = "Couldn't delete record!!! " }); ;
+
+            }
+
         }
 
     }

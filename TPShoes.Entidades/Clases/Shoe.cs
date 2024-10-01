@@ -18,7 +18,7 @@
         public Sport Sport { get; set; } = null!;
 
         public ICollection<SizeShoe> SizeShoe { get; set; } = new List<SizeShoe>();
-
+        
         //public object Clone()
         //{
         //    return new Shoe

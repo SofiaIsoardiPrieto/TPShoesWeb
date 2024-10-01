@@ -7,5 +7,6 @@ namespace TPShoes.Entidades.ViewModels.Colour
         public int ColourId { get; set; }
         [DisplayName("Colour")]
         public string ColourName { get; set; } = null!;
+        public int CantShoes { get; set; }
     }
 }

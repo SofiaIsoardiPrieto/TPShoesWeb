@@ -14,6 +14,7 @@ namespace TPShoes.Entidades.ViewModels.Shoe
         public string Genre { get; set; } = null!;
         public string Colour { get; set; } = null!;
         public string Sport { get; set; } = null!;
+        public string Size { get; set; } = null!;
 
 
         [DisplayName("Modelo")]
