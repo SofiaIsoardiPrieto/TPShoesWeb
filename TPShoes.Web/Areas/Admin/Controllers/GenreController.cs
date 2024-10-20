@@ -9,6 +9,7 @@ using X.PagedList;
 
 namespace TPShoes.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class GenreController : Controller
     {
         private readonly IGenresServicio? _serviciosGenre;

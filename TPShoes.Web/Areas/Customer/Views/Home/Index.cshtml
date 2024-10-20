@@ -1,8 +1,72 @@
-﻿@{
-    ViewData["Title"] = "Página principal";
-}
+﻿﻿
+@model IPagedList<ShoeHomeIndexVm>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
 
-<div class="text-center">
-	<h1 class="display-4">Zapateria "Los Juanetes"</h1>
-	<p>Calzados para todo tipo de juanetes</p>
+@{
+    ViewData["Title"] = "Pagina Principal";
+    string ShrinkShoeName(string ShoeName)
+    {
+        return ShoeName.Length >= 20 ? $"{ShoeName.Substring(0, 15)}..." : ShoeName;
+    }
+}
+<div class="row">
+    @foreach (var Shoe in Model)
+    {
+        <div class="col-lg-3 col-sm-6">
+            <div class="row p-2">
+                <div class="col-12 p1">
+                    <div class="card border-0 p-3 shadow border-top border-5 rounded">
+                        <img src="@(string.IsNullOrEmpty(Shoe.ImageUrl)?"/images/SinImagenDisponible.jpg":Shoe.ImageUrl)" class="card-img-top d-block mx-auto" alt="..." style="width: 200px; height: 200px; object-fit: cover;">
+                        <div class="card-body pb-0">
+                            <div class="pl-1">
+                                <p class="card-text text-center h5 text-dark opacity-75">@ShrinkShoeName($"{Shoe.Model}")</p>
+                                <p class="card-text text-center text-info">@Shoe.Brand</p>
+
+                            </div>
+                            @if (Shoe.Active)
+                            {
+                                <p class="text-center">
+                                    <span class="badge bg-primary">Disponible</span>
+                                </p>
+
+                            }
+                            else
+                            {
+                                <p class="text-center">
+                                    <span class="badge bg-danger">Suspendido</span>
+                                </p>
+                            }
+                            <div class="pl-1">
+                                <p class="text-dark text-center opacity-75 mb-0">
+                                    Precio final:
+                                    $<span class="text-dark text-center opacity-75h">@Shoe.FinalPrice.ToString("#.##")</span>
+                                </p>
+
+                            </div>
+                            <div class="pl-1">
+                                <p class="text-dark text-center opacity-50">
+                                    Precio neto:
+                                    $<span>@Shoe.Price.ToString("#.##")</span> 
+                                </p>
+
+                            </div>
+
+                        </div>
+                        <div>
+                            <a class="btn btn-secondary bg-gradient form-control"
+                               asp-action="Details"
+                               asp-route-id="@Shoe.ShoeId"
+                                asp-route-returnUrl="@Url.Action("Index",new{page=Model.PageNumber})">
+                                Details
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    }
+    <partial name="_Pager" model="@Model" />
 </div>

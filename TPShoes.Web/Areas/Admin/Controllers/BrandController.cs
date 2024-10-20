@@ -8,6 +8,7 @@ using X.PagedList;
 
 namespace TPShoes.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class BrandController : Controller
     {
         private readonly IBrandsServicio? _serviciosBrand;

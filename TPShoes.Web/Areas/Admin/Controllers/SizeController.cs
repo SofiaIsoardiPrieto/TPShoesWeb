@@ -9,6 +9,7 @@ using X.PagedList;
 
 namespace TPShoes.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class SizeController : Controller
     {
         private readonly ISizesServicio? _serviciosSize;
