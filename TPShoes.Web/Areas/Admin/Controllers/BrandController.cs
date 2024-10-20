@@ -6,7 +6,7 @@ using TPShoes.Entidades.ViewModels.Shoe;
 using TPShoes.Servicios.Interfaces;
 using X.PagedList;
 
-namespace TPShoes.Web.Controllers
+namespace TPShoes.Web.Areas.Admin.Controllers
 {
     public class BrandController : Controller
     {
@@ -219,8 +219,8 @@ namespace TPShoes.Web.Controllers
                 }
                 var shoeList = _serviciosShoe.GetLista(filter: b => b.BrandId == brand.BrandId, propertiesNames: "Brand,Genre,Colour,Sport");
                 var shoeListVm = _mapper?.Map<IEnumerable<ShoeListVm>>(shoeList).ToList();
-                
-                
+
+
                 return View(shoeListVm);
             }
             catch (Exception)

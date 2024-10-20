@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using TPShoes.Web.Models;
 
-namespace TPShoes.Web.Controllers
+namespace TPShoes.Web.Areas.Customer.Controllers
 {
     public class HomeController : Controller
     {

@@ -7,7 +7,7 @@ using TPShoes.Entidades.ViewModels.Size;
 using TPShoes.Servicios.Interfaces;
 using X.PagedList;
 
-namespace TPShoes.Web.Controllers
+namespace TPShoes.Web.Areas.Admin.Controllers
 {
     public class SizeController : Controller
     {

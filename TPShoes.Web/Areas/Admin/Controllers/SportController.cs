@@ -1,21 +1,22 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TPShoes.Entidades.Clases;
-using TPShoes.Entidades.ViewModels.Colour;
+using TPShoes.Entidades.ViewModels.Brand;
 using TPShoes.Entidades.ViewModels.Shoe;
+using TPShoes.Entidades.ViewModels.Sport;
 using TPShoes.Servicios.Interfaces;
 using X.PagedList;
 
-namespace TPShoes.Web.Controllers
+namespace TPShoes.Web.Areas.Admin.Controllers
 {
-    public class ColourController : Controller
+    public class SportController : Controller
     {
-        private readonly IColoursServicio? _serviciosColour;
+        private readonly ISportsServicio? _serviciosSport;
         private readonly IShoesServicio? _serviciosShoe;
         private readonly IMapper? _mapper;
-        public ColourController(IColoursServicio? servicios, IShoesServicio? serviciosShoe, IMapper mapper)
+        public SportController(ISportsServicio? servicios, IShoesServicio? serviciosShoe, IMapper mapper)
         {
-            _serviciosColour = servicios ?? throw new ApplicationException("Dependencies not set");
+            _serviciosSport = servicios ?? throw new ApplicationException("Dependencies not set");
             _serviciosShoe = serviciosShoe ?? throw new ApplicationException("Dependencies not set");
             _mapper = mapper ?? throw new ApplicationException("Dependencies not set");
         }
@@ -24,57 +25,57 @@ namespace TPShoes.Web.Controllers
         {
             int pageNumber = page ?? 1;
             ViewBag.currentPageSize = pageSize;
-            IEnumerable<Colour>? colours;
+            IEnumerable<Sport>? sports;
             if (!viewAll)
             {
                 if (!string.IsNullOrEmpty(searchTerm))
                 {
-                    colours = _serviciosColour?
-                        .GetLista(orderBy: o => o.OrderBy(c => c.ColourName),
-                            filter: c => c.ColourName.Contains(searchTerm));
+                    sports = _serviciosSport?
+                        .GetLista(orderBy: o => o.OrderBy(c => c.SportName),
+                            filter: c => c.SportName.Contains(searchTerm));
                     ViewBag.currentSearchTerm = searchTerm;
                 }
                 else
                 {
-                    colours = _serviciosColour?
-                        .GetLista(orderBy: o => o.OrderBy(c => c.ColourName));
+                    sports = _serviciosSport?
+                        .GetLista(orderBy: o => o.OrderBy(c => c.SportName));
                 }
             }
             else
             {
-                colours = _serviciosColour?
-                    .GetLista(orderBy: o => o.OrderBy(c => c.ColourName));
+                sports = _serviciosSport?
+                    .GetLista(orderBy: o => o.OrderBy(c => c.SportName));
             }
-            var colourListVm = _mapper?.Map<List<ColourListVm>>(colours)
+            var sportListVm = _mapper?.Map<List<SportListVm>>(sports)
                .ToPagedList(pageNumber, pageSize);
-            foreach (var item in colourListVm)
+            foreach (var item in sportListVm)
             {
-                item.CantShoes = _serviciosShoe.GetCantidad(b => b.ColourId == item.ColourId);
+                item.CantShoes = _serviciosShoe.GetCantidad(b => b.SportId == item.SportId);
             }
-            return View(colourListVm);
+            return View(sportListVm);
         }
         public IActionResult UpSert(int? id)
         {
-            if (_serviciosColour == null || _mapper == null)
+            if (_serviciosSport == null || _mapper == null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Dependencias no están configuradas correctamente");
             }
-            ColourEditVm colourVm;
+            SportEditVm sportVm;
             if (id == null || id == 0)
             {
-                colourVm = new ColourEditVm();
+                sportVm = new SportEditVm();
             }
             else
             {
                 try
                 {
-                    Colour? colour = _serviciosColour.GetColourPorId(filter: c => c.ColourId == id);
-                    if (colour == null)
+                    Sport? sport = _serviciosSport.GetSportPorId(filter: c => c.SportId == id);
+                    if (sport == null)
                     {
                         return NotFound();
                     }
-                    colourVm = _mapper.Map<ColourEditVm>(colour);
-                    return View(colourVm);
+                    sportVm = _mapper.Map<SportEditVm>(sport);
+                    return View(sportVm);
                 }
                 catch (Exception)
                 {
@@ -82,35 +83,35 @@ namespace TPShoes.Web.Controllers
                     return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving the record.");
                 }
             }
-            return View(colourVm);
+            return View(sportVm);
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult UpSert(ColourEditVm ColourVm)
+        public IActionResult UpSert(SportEditVm SportVm)
         {
             if (!ModelState.IsValid)
             {
-                return View(ColourVm);
+                return View(SportVm);
             }
 
-            if (_serviciosColour == null || _mapper == null)
+            if (_serviciosSport == null || _mapper == null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Dependencias no están configuradas correctamente");
             }
 
             try
             {
-                Colour colour = _mapper.Map<Colour>(ColourVm);
+                Sport sport = _mapper.Map<Sport>(SportVm);
 
-                if (_serviciosColour.Existe(colour))
+                if (_serviciosSport.Existe(sport))
                 {
                     ModelState.AddModelError(string.Empty, "Record already exist");
-                    return View(ColourVm);
+                    return View(SportVm);
                 }
 
-                _serviciosColour.Guardar(colour);
+                _serviciosSport.Guardar(sport);
                 TempData["success"] = "Record successfully added/edited";
                 return RedirectToAction("Index");
             }
@@ -118,7 +119,7 @@ namespace TPShoes.Web.Controllers
             {
                 // Log the exception (ex) here as needed
                 ModelState.AddModelError(string.Empty, "An error occurred while editing the record.");
-                return View(ColourVm);
+                return View(SportVm);
             }
         }
 
@@ -130,23 +131,23 @@ namespace TPShoes.Web.Controllers
             {
                 return NotFound();
             }
-            Colour? colour = _serviciosColour?.GetColourPorId(filter: c => c.ColourId == id);
-            if (colour is null)
+            Sport? sport = _serviciosSport?.GetSportPorId(filter: c => c.SportId == id);
+            if (sport is null)
             {
                 return NotFound();
             }
             try
             {
-                if (_serviciosColour == null || _mapper == null)
+                if (_serviciosSport == null || _mapper == null)
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError, "Dependencias no están configuradas correctamente");
                 }
 
-                if (_serviciosColour.EstaRelacionado(colour))
+                if (_serviciosSport.EstaRelacionado(sport))
                 {
                     return Json(new { success = false, message = "Related Record... Delete Deny!!" }); ;
                 }
-                _serviciosColour.Borrar(colour);
+                _serviciosSport.Borrar(sport);
                 return Json(new { success = true, message = "Record successfully deleted" });
             }
             catch (Exception)
@@ -165,17 +166,17 @@ namespace TPShoes.Web.Controllers
             }
             try
             {
-                if (_serviciosColour == null || _mapper == null)
+                if (_serviciosSport == null || _mapper == null)
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError, "Dependencias no están configuradas correctamente");
                 }
-                Colour? colour = _serviciosColour?.GetColourPorId(filter: c => c.ColourId == id.Value);
+                Sport? sport = _serviciosSport?.GetSportPorId(filter: c => c.SportId == id.Value);
 
-                if (colour is null)
+                if (sport is null)
                 {
                     return NotFound();
                 }
-                var shoeList = _serviciosShoe.GetLista(filter: b => b.ColourId == colour.ColourId, propertiesNames: "Brand,Genre,Colour,Sport");
+                var shoeList = _serviciosShoe.GetLista(filter: b => b.SportId == sport.SportId, propertiesNames: "Brand,Genre,Colour,Sport");
                 var shoeListVm = _mapper?.Map<IEnumerable<ShoeListVm>>(shoeList).ToList();
 
 

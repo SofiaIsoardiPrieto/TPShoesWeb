@@ -8,7 +8,7 @@ using TPShoes.Servicios.Interfaces;
 using X.PagedList;
 
 
-namespace TPShoes.Web.Controllers
+namespace TPShoes.Web.Areas.Admin.Controllers
 {
     public class ShoeController : Controller
     {

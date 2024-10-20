@@ -2,21 +2,21 @@
 using Microsoft.AspNetCore.Mvc;
 using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.ViewModels.Brand;
+using TPShoes.Entidades.ViewModels.Genre;
 using TPShoes.Entidades.ViewModels.Shoe;
-using TPShoes.Entidades.ViewModels.Sport;
 using TPShoes.Servicios.Interfaces;
 using X.PagedList;
 
-namespace TPShoes.Web.Controllers
+namespace TPShoes.Web.Areas.Admin.Controllers
 {
-    public class SportController : Controller
+    public class GenreController : Controller
     {
-        private readonly ISportsServicio? _serviciosSport;
+        private readonly IGenresServicio? _serviciosGenre;
         private readonly IShoesServicio? _serviciosShoe;
         private readonly IMapper? _mapper;
-        public SportController(ISportsServicio? servicios, IShoesServicio? serviciosShoe, IMapper mapper)
+        public GenreController(IGenresServicio? servicios, IShoesServicio? serviciosShoe, IMapper mapper)
         {
-            _serviciosSport = servicios ?? throw new ApplicationException("Dependencies not set");
+            _serviciosGenre = servicios ?? throw new ApplicationException("Dependencies not set");
             _serviciosShoe = serviciosShoe ?? throw new ApplicationException("Dependencies not set");
             _mapper = mapper ?? throw new ApplicationException("Dependencies not set");
         }
@@ -25,57 +25,57 @@ namespace TPShoes.Web.Controllers
         {
             int pageNumber = page ?? 1;
             ViewBag.currentPageSize = pageSize;
-            IEnumerable<Sport>? sports;
+            IEnumerable<Genre>? genres;
             if (!viewAll)
             {
                 if (!string.IsNullOrEmpty(searchTerm))
                 {
-                    sports = _serviciosSport?
-                        .GetLista(orderBy: o => o.OrderBy(c => c.SportName),
-                            filter: c => c.SportName.Contains(searchTerm));
+                    genres = _serviciosGenre?
+                        .GetLista(orderBy: o => o.OrderBy(c => c.GenreName),
+                            filter: c => c.GenreName.Contains(searchTerm));
                     ViewBag.currentSearchTerm = searchTerm;
                 }
                 else
                 {
-                    sports = _serviciosSport?
-                        .GetLista(orderBy: o => o.OrderBy(c => c.SportName));
+                    genres = _serviciosGenre?
+                        .GetLista(orderBy: o => o.OrderBy(c => c.GenreName));
                 }
             }
             else
             {
-                sports = _serviciosSport?
-                    .GetLista(orderBy: o => o.OrderBy(c => c.SportName));
+                genres = _serviciosGenre?
+                    .GetLista(orderBy: o => o.OrderBy(c => c.GenreName));
             }
-            var sportListVm = _mapper?.Map<List<SportListVm>>(sports)
+            var genreListVm = _mapper?.Map<List<GenreListVm>>(genres)
                .ToPagedList(pageNumber, pageSize);
-            foreach (var item in sportListVm)
+            foreach (var item in genreListVm)
             {
-                item.CantShoes = _serviciosShoe.GetCantidad(b => b.SportId == item.SportId);
+                item.CantShoes = _serviciosShoe.GetCantidad(b => b.GenreId == item.GenreId);
             }
-            return View(sportListVm);
+            return View(genreListVm);
         }
         public IActionResult UpSert(int? id)
         {
-            if (_serviciosSport == null || _mapper == null)
+            if (_serviciosGenre == null || _mapper == null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Dependencias no están configuradas correctamente");
             }
-            SportEditVm sportVm;
+            GenreEditVm genreVm;
             if (id == null || id == 0)
             {
-                sportVm = new SportEditVm();
+                genreVm = new GenreEditVm();
             }
             else
             {
                 try
                 {
-                    Sport? sport = _serviciosSport.GetSportPorId(filter: c => c.SportId == id);
-                    if (sport == null)
+                    Genre? genre = _serviciosGenre.GetGenrePorId(filter: c => c.GenreId == id);
+                    if (genre == null)
                     {
                         return NotFound();
                     }
-                    sportVm = _mapper.Map<SportEditVm>(sport);
-                    return View(sportVm);
+                    genreVm = _mapper.Map<GenreEditVm>(genre);
+                    return View(genreVm);
                 }
                 catch (Exception)
                 {
@@ -83,35 +83,35 @@ namespace TPShoes.Web.Controllers
                     return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving the record.");
                 }
             }
-            return View(sportVm);
+            return View(genreVm);
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult UpSert(SportEditVm SportVm)
+        public IActionResult UpSert(GenreEditVm GenreVm)
         {
             if (!ModelState.IsValid)
             {
-                return View(SportVm);
+                return View(GenreVm);
             }
 
-            if (_serviciosSport == null || _mapper == null)
+            if (_serviciosGenre == null || _mapper == null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Dependencias no están configuradas correctamente");
             }
 
             try
             {
-                Sport sport = _mapper.Map<Sport>(SportVm);
+                Genre genre = _mapper.Map<Genre>(GenreVm);
 
-                if (_serviciosSport.Existe(sport))
+                if (_serviciosGenre.Existe(genre))
                 {
                     ModelState.AddModelError(string.Empty, "Record already exist");
-                    return View(SportVm);
+                    return View(GenreVm);
                 }
 
-                _serviciosSport.Guardar(sport);
+                _serviciosGenre.Guardar(genre);
                 TempData["success"] = "Record successfully added/edited";
                 return RedirectToAction("Index");
             }
@@ -119,7 +119,7 @@ namespace TPShoes.Web.Controllers
             {
                 // Log the exception (ex) here as needed
                 ModelState.AddModelError(string.Empty, "An error occurred while editing the record.");
-                return View(SportVm);
+                return View(GenreVm);
             }
         }
 
@@ -131,23 +131,23 @@ namespace TPShoes.Web.Controllers
             {
                 return NotFound();
             }
-            Sport? sport = _serviciosSport?.GetSportPorId(filter: c => c.SportId == id);
-            if (sport is null)
+            Genre? genre = _serviciosGenre?.GetGenrePorId(filter: c => c.GenreId == id);
+            if (genre is null)
             {
                 return NotFound();
             }
             try
             {
-                if (_serviciosSport == null || _mapper == null)
+                if (_serviciosGenre == null || _mapper == null)
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError, "Dependencias no están configuradas correctamente");
                 }
 
-                if (_serviciosSport.EstaRelacionado(sport))
+                if (_serviciosGenre.EstaRelacionado(genre))
                 {
                     return Json(new { success = false, message = "Related Record... Delete Deny!!" }); ;
                 }
-                _serviciosSport.Borrar(sport);
+                _serviciosGenre.Borrar(genre);
                 return Json(new { success = true, message = "Record successfully deleted" });
             }
             catch (Exception)
@@ -166,17 +166,17 @@ namespace TPShoes.Web.Controllers
             }
             try
             {
-                if (_serviciosSport == null || _mapper == null)
+                if (_serviciosGenre == null || _mapper == null)
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError, "Dependencias no están configuradas correctamente");
                 }
-                Sport? sport = _serviciosSport?.GetSportPorId(filter: c => c.SportId == id.Value);
+                Genre? genre = _serviciosGenre?.GetGenrePorId(filter: c => c.GenreId == id.Value);
 
-                if (sport is null)
+                if (genre is null)
                 {
                     return NotFound();
                 }
-                var shoeList = _serviciosShoe.GetLista(filter: b => b.SportId == sport.SportId, propertiesNames: "Brand,Genre,Colour,Sport");
+                var shoeList = _serviciosShoe.GetLista(filter: b => b.GenreId == genre.GenreId, propertiesNames: "Brand,Genre,Colour,Sport");
                 var shoeListVm = _mapper?.Map<IEnumerable<ShoeListVm>>(shoeList).ToList();
 
 
