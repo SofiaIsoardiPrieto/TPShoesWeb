@@ -214,11 +214,17 @@ namespace TPShoes.Web.Areas.Admin.Controllers
                 }
                 Brand? brand = _serviciosBrand?.GetBrandPorId(filter: c => c.BrandId == id.Value);
 
-                if (brand is null)
+                if (brand is null )
                 {
                     return NotFound();
                 }
                 var shoeList = _serviciosShoe.GetLista(filter: b => b.BrandId == brand.BrandId, propertiesNames: "Brand,Genre,Colour,Sport");
+                if (shoeList is null || !shoeList.Any())
+                {
+                    
+                    return NotFound();
+                   
+                }
                 var shoeListVm = _mapper?.Map<IEnumerable<ShoeListVm>>(shoeList).ToList();
 
 

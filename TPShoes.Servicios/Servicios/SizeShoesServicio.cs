@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using TPShoes.Datos;
+﻿using TPShoes.Datos;
 using TPShoes.Datos.Interfaces;
 using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.Dtos;
@@ -125,6 +124,18 @@ namespace TPShoes.Servicios.Servicios
             }
         }
 
+        public List<SizeShoe>? GetSizeShoesPorId(int shoeId)
+        {
+            try
+            {
+                return _repository.GetSizeShoesPorId(shoeId);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         public List<SizeShoeDto>? GetSizeShoeDtoPorId(int shoeId)
         {
             try
@@ -233,5 +244,7 @@ namespace TPShoes.Servicios.Servicios
         {
             return _repository.GetListaShoePorSize(value);
         }
+
+      
     }
 }

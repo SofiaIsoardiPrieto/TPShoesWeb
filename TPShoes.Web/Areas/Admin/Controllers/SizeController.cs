@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.ViewModels.Brand;
+using TPShoes.Entidades.ViewModels.Genre;
 using TPShoes.Entidades.ViewModels.Shoe;
 using TPShoes.Entidades.ViewModels.Size;
+using TPShoes.Entidades.ViewModels.SizeShoe;
 using TPShoes.Servicios.Interfaces;
 using X.PagedList;
 
@@ -57,6 +59,39 @@ namespace TPShoes.Web.Areas.Admin.Controllers
             }
             return View(SizeListVm);
         }
+        public IActionResult UpSert(int? id)
+        {
+            if (_serviciosSizeShoe == null || _mapper == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Dependencias no están configuradas correctamente");
+            }
+            SizeShoeListVm sizeShoeListVm;
+            if (id == null || id == 0)
+            {
+                sizeShoeListVm = new SizeShoeListVm();
+            }
+            else
+            {
+                try
+                {
+                    int idSizeShoe = id.Value;
+                    SizeShoe? sizeShoe = _serviciosSizeShoe.GetSizeShoePorId(idSizeShoe);
+                    if (sizeShoe == null)
+                    {
+                        return NotFound();
+                    }
+                    sizeShoeListVm = _mapper.Map<SizeShoeListVm>(sizeShoe);
+                    return View(sizeShoe);
+                }
+                catch (Exception)
+                {
+                    // Log the exception (ex) here as needed
+                    return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving the record.");
+                }
+            }
+            return View(sizeShoeListVm);
+        }
+
 
         public IActionResult Details(int? id)
         {
@@ -77,7 +112,12 @@ namespace TPShoes.Web.Areas.Admin.Controllers
                     return NotFound();
                 }
                 var shoeList = _serviciosSizeShoe.GetListaShoePorSize(id.Value);
+                if (shoeList is null || !shoeList.Any())
+                {
 
+                    return NotFound();
+
+                }
                 var shoeListVm = _mapper?.Map<IEnumerable<ShoeListVm>>(shoeList).ToList();
 
 

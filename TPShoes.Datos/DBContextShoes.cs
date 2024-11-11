@@ -236,7 +236,7 @@ namespace TPShoes.Datos
             modelBuilder.Entity<SizeShoe>(entity =>
             {
                 entity.ToTable("SizeShoes");
-                entity.Property(e => e.Stok).IsRequired();
+                entity.Property(e => e.Stock).IsRequired();
 
                 //Modificacion UniqueSizeShoes
                 entity.HasIndex(ss => new { ss.ShoeId, ss.SizeId })

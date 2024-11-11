@@ -123,6 +123,9 @@
                                 <a onclick="Delete('/Shoe/Delete/@item.ShoeId',@item.ShoeId,'@item.Model')" class="btn btn-danger">
                                     <i class="bi bi-trash-fill"></i> Delete
                                 </a>
+                                <a class="btn btn-info" asp-controller="Shoe" asp-action="Details" asp-route-id="@item.ShoeId" style="background-color:aqua">
+                                    Details
+                                </a>
                             </div>
                         </td>
                     </tr>

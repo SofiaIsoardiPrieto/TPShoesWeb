@@ -9,6 +9,7 @@ namespace TPShoes.Servicios.Interfaces
         void Guardar(Size size);
         void Guardar(SizeShoe sizeShoe);
         bool Existe(Size size);
+        List<SizeShoe>? GetSizeShoesPorId(int shoeId);
         List<Size> GetSizesPorId(int id, bool incluyeShoe = false);
        // int GetCantidad();
         bool EstaRelacionado(Size size);

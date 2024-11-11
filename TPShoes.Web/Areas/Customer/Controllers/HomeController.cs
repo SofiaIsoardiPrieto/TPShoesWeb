@@ -1,9 +1,10 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.ViewModels.Shoe;
+using TPShoes.Entidades.ViewModels.Size;
 using TPShoes.Servicios.Interfaces;
-using TPShoes.Servicios.Servicios;
 using TPShoes.Web.Models;
 using X.PagedList;
 
@@ -13,12 +14,14 @@ namespace TPShoes.Web.Areas.Customer.Controllers
     public class HomeController : Controller
     {
         private readonly IShoesServicio? _serviciosShoe;
+        private readonly ISizeShoesServicio? _serviciosSizeShoe;
         private readonly IMapper? _mapper;
         private readonly int pageSize = 8;
 
-        public HomeController(IShoesServicio serviciosShoe, IMapper? mapper)
+        public HomeController(IShoesServicio serviciosShoe, ISizeShoesServicio? serviciosSizeShoe, IMapper? mapper)
         {
             _serviciosShoe = serviciosShoe ?? throw new ApplicationException("Dependencies not set");
+            _serviciosSizeShoe = serviciosSizeShoe ?? throw new ApplicationException("Dependencies not set");
             _mapper = mapper ?? throw new ApplicationException("Dependencies not set");
         }
         public IActionResult Hero()
@@ -35,9 +38,19 @@ namespace TPShoes.Web.Areas.Customer.Controllers
             return View(shoesHomeIndexVm.ToPagedList(currentPage, pageSize));
         }
 
-        public IActionResult Privacy()
+        public IActionResult Details(int? id)
         {
-            return View();
+            if (id == null || id.Value == 0) { return NotFound(); }
+            int idShoe = id.Value;
+            List<Size> TallesList = _serviciosSizeShoe!.GetSizesPorId(idShoe, true);
+            if (TallesList is null || !TallesList.Any())
+            {
+
+                return NotFound();
+
+            }
+            var sizeListVm = _mapper!.Map<List<SizeListVm>>(TallesList);
+            return View(sizeListVm);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

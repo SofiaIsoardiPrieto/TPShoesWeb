@@ -18,7 +18,7 @@ namespace TPShoes.Datos.Interfaces
         bool Existe(Size size);
         //  List<Size> GetLista();
         List<Size> GetSizesPorId(int shoeId, bool incluyeShoe = false);
-
+        List<SizeShoe>? GetSizeShoesPorId(int shoeId);
       //  int GetCantidad();
       //  List<Size> GetSizesPaginadosOrdenados(int page, int pageSize, Orden? orden = null);
         bool EstaRelacionado(Size size);

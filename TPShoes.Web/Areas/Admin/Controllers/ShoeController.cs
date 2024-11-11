@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.ViewModels.Shoe;
-using TPShoes.Entidades.ViewModels.Size;
+using TPShoes.Entidades.ViewModels.SizeShoe;
 using TPShoes.Servicios.Interfaces;
 using X.PagedList;
 
@@ -14,6 +14,7 @@ namespace TPShoes.Web.Areas.Admin.Controllers
     public class ShoeController : Controller
     {
         private readonly IShoesServicio? _shoeService;
+        private readonly ISizeShoesServicio? _sizeShoeService;
         private readonly IBrandsServicio? _brandService;
         private readonly IColoursServicio? _colourService;
         private readonly IGenresServicio? _genreService;
@@ -23,7 +24,7 @@ namespace TPShoes.Web.Areas.Admin.Controllers
 
         private int pageSize = 10;
 
-        public ShoeController(IShoesServicio? shoeService,
+        public ShoeController(IShoesServicio? shoeService, ISizeShoesServicio? sizeShoeService,
             IBrandsServicio brandService,
             IColoursServicio colourService,
             IGenresServicio genreService,
@@ -31,6 +32,7 @@ namespace TPShoes.Web.Areas.Admin.Controllers
             IMapper? mapper)
         {
             _shoeService = shoeService ?? throw new ApplicationException("Dependencies not set");
+            _sizeShoeService = sizeShoeService ?? throw new ApplicationException("Dependencies not set");
             _brandService = brandService ?? throw new ApplicationException("Dependencies not set");
             _colourService = colourService ?? throw new ApplicationException("Dependencies not set");
             _genreService = genreService ?? throw new ApplicationException("Dependencies not set");
@@ -272,7 +274,40 @@ namespace TPShoes.Web.Areas.Admin.Controllers
 
 
 
+        public IActionResult Details(int? id)
+        {
+            if (id is null || id == 0)
+            {
+                return NotFound();
+            }
+            int idShoe = id.Value;
+            try
+            {
+                if (_sizeShoeService == null || _mapper == null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Dependencias no están configuradas correctamente");
+                }
 
+                var sizeShoeList = _sizeShoeService.GetSizeShoesPorId(idShoe);
+                if (sizeShoeList is null || !sizeShoeList.Any())
+                {
+
+                    return NotFound();
+
+                }
+                var sizeShoeListVm = _mapper?.Map<IEnumerable<SizeShoeListVm>>(sizeShoeList).ToList();
+
+
+                return View(sizeShoeList);
+            }
+            catch (Exception)
+            {
+
+                return Json(new { success = false, message = "Error!!! " }); ;
+
+            }
+
+        }
 
     }
 }

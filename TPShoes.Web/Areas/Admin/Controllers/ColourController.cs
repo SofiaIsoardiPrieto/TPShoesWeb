@@ -177,6 +177,12 @@ namespace TPShoes.Web.Areas.Admin.Controllers
                     return NotFound();
                 }
                 var shoeList = _serviciosShoe.GetLista(filter: b => b.ColourId == colour.ColourId, propertiesNames: "Brand,Genre,Colour,Sport");
+                if (shoeList is null || !shoeList.Any())
+                {
+
+                    return NotFound();
+
+                }
                 var shoeListVm = _mapper?.Map<IEnumerable<ShoeListVm>>(shoeList).ToList();
 
 

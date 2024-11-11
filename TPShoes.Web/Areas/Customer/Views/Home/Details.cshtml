@@ -1,35 +1,31 @@
 ﻿﻿
-@model IEnumerable<ShoeListVm>
-
+﻿
+@model IEnumerable<SizeListVm>
 @using X.PagedList
 @using X.PagedList.Mvc.Core
 @{
-    ViewData["Title"] = "Shoe List";
+    ViewData["Title"] = "Size List";
 }
 <div class="container">
     @Html.AntiForgeryToken()
     <div class="row mb-3">
         <div class="col-6">
-            <h3>Size List de: @Model.ElementAt(0).Brand</h3>
-        </div>      
+            <h3>Size List </h3>
+        </div>
         <div class="col-6 text-end">
-            <a asp-area="Admin" asp-controller="Brand" asp-action="Index" class="btn btn-primary">
+            <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i>
                 Volver
             </a>
         </div>
     </div>
-  
     <table class="table table-bordered table-hover">
         <thead>
             <tr>
-                <th>Colour</th>
-                <th>Genre</th>
-                <th>Sport</th>
-                <th>Model</th>
-                <th>Description</th>
-                <th>Price</th>
-               
+
+                <th>Numero</th>
+              
+
             </tr>
         </thead>
         <tbody>
@@ -37,14 +33,10 @@
             {
                 foreach (var item in Model)
                 {
-                    <tr id="@item.ShoeId">
+                    <tr id="@item.SizeId">
 
-                        <td>@item.Colour</td>
-                        <td>@item.Genre</td>
-                        <td>@item.Sport</td>
-                        <td>@item.Model</td>
-                        <td>@item.Description</td>
-                        <td>@item.Price</td>
+                        <td>@item.SizeNumber</td>
+                       
                     </tr>
                 }
             }
@@ -56,7 +48,7 @@
             }
         </tbody>
     </table>
- @*    <partial name="_Pager" model="@Model" /> *@
+    @*    <partial name="_Pager" model="@Model" /> *@
 
 
 </div>

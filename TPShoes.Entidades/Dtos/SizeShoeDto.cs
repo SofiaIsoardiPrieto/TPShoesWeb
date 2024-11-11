@@ -11,7 +11,7 @@ namespace TPShoes.Entidades.Dtos
     {
         public int SizeShoeId { get; set; }
         public string? Size { get; set; }
-        public int Stok { get; set; }
+        public int Stock { get; set; }
 
         public object Clone()
         {

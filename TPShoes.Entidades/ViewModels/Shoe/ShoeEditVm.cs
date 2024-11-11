@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
 
 
 
@@ -63,6 +64,12 @@ namespace TPShoes.Entidades.ViewModels.Shoe
         [DisplayName("Precio")]
         public decimal Price { get; set; }
 
-       
+        [Display(Name = "Image")]
+        public string? ImageUrl { get; set; }
+
+        public IFormFile? ImageFile { get; set; }  // Propiedad para la imagen
+
+        [Display(Name = "Remove Image")]
+        public bool RemoveImage { get; set; }  // Propiedad para borrar imagen cargada
     }
 }

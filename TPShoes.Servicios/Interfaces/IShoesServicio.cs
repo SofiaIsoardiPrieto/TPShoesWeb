@@ -13,7 +13,9 @@ namespace TPShoes.Servicios.Interfaces
         void Borrar(Shoe shoe);
         bool Existe(Shoe shoe);
         int GetCantidad(Expression<Func<Shoe, bool>>? filtro = null);
-
+        Shoe? Get(Expression<Func<Shoe, bool>>? filter = null,
+          string? propertiesNames = null,
+          bool tracked = true);
         Shoe? GetShoePorId(Expression<Func<Shoe, bool>>? filter = null,
              string? propertiesNames = null,
              bool tracked = true);

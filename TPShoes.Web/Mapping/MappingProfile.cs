@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using TPShoes.Entidades.Clases;
+using TPShoes.Entidades.Dtos;
 using TPShoes.Entidades.ViewModels.Brand;
 using TPShoes.Entidades.ViewModels.Colour;
 using TPShoes.Entidades.ViewModels.Genre;
 using TPShoes.Entidades.ViewModels.Shoe;
 using TPShoes.Entidades.ViewModels.Size;
+using TPShoes.Entidades.ViewModels.SizeShoe;
 using TPShoes.Entidades.ViewModels.Sport;
 
 namespace TPShoes.Web.Mapping
@@ -24,7 +26,7 @@ namespace TPShoes.Web.Mapping
 
         private void LoadSizeShoeMapping()
         {
-
+            CreateMap<SizeShoe, SizeShoeListVm>().ReverseMap(); 
         }
 
         private void LoadSizeMapping()
@@ -68,7 +70,13 @@ namespace TPShoes.Web.Mapping
                 .ForMember(dest => dest.Colour, opt => opt.MapFrom(src => src.Colour.ColourName))
                 .ForMember(dest => dest.Sport, opt => opt.MapFrom(src => src.Sport.SportName))
                 .ForMember(dest => dest.FinalPrice, opt => opt.MapFrom(src => src.Price * 1.21m));
-          
+            CreateMap<Shoe, ShoeHomeDetailsVm>()
+              .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Brand.BrandName))
+              .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre.GenreName))
+              .ForMember(dest => dest.Colour, opt => opt.MapFrom(src => src.Colour.ColourName))
+              .ForMember(dest => dest.Sport, opt => opt.MapFrom(src => src.Sport.SportName))
+              .ForMember(dest => dest.FinalPrice, opt => opt.MapFrom(src => src.Price * 1.21m));
+
         }
     }
 }

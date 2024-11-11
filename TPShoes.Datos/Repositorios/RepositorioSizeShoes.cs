@@ -141,13 +141,28 @@ namespace TPShoes.Datos.Repositorios
                 {
                     SizeShoeId = p.SizeShoeId,
                     Size = p.Size != null ? p.Size.SizeNumber.ToString() : null,
-                    Stok = p.Stok
+                    Stock = p.Stock
                 })
                 .ToList();
 
             return listaDto;
         }
+        public List<SizeShoe>? GetSizeShoesPorId(int shoeId)
+        {
+            IQueryable<SizeShoe> query = _db.SizeShoes
+                .Include(p => p.Shoe)
+                .Include(p => p.Size)
+                .AsNoTracking()
+                .Where(p => p.ShoeId == shoeId); // Filtro por ShoeId
 
+            // Ejecutar la consulta y obtener la lista de SizeShoe
+            List<SizeShoe> lista = query.ToList();
+
+            // Convertir la lista de SizeShoe a una lista de SizeShoeDto
+           
+
+            return lista;
+        }
         public SizeShoe? GetSizeShoePorId(int shoeId, int sizeId)
         {
             try

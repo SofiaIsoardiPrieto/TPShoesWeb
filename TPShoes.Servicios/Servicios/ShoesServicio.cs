@@ -210,6 +210,11 @@ namespace TPShoes.Servicios.Servicios
         {
             return _repository!.EstaRelacionado(shoeId);
         }
+
+        public Shoe? Get(Expression<Func<Shoe, bool>>? filter = null, string? propertiesNames = null, bool tracked = true)
+        {
+            return _repository!.Get(filter, propertiesNames, tracked);
+        }
     }
 
 }
