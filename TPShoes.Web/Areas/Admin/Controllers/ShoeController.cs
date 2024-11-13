@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Drawing.Drawing2D;
 using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.ViewModels.Shoe;
 using TPShoes.Entidades.ViewModels.SizeShoe;
@@ -181,8 +183,6 @@ namespace TPShoes.Web.Areas.Admin.Controllers
                 CargarListasCombos(shoeEditVm);
                 return View(shoeEditVm);
             }
-
-
             try
             {
                 Shoe shoe = _mapper!.Map<Shoe>(shoeEditVm);
@@ -309,5 +309,72 @@ namespace TPShoes.Web.Areas.Admin.Controllers
 
         }
 
+
+        public IActionResult EditSize(int? id)
+        {
+            int sizeShoeId = id.Value;
+            SizeShoeListVm sizeShoeListVm;
+            if (id == null || id == 0)
+            {
+                sizeShoeListVm = new SizeShoeListVm();
+            }
+            else
+            {
+                try
+                {
+                    SizeShoe sizeShoe = _sizeShoeService.GetSizeShoePorId(sizeShoeId);
+                    if (sizeShoe == null)
+                    {
+                        return NotFound();
+                    }
+                    sizeShoeListVm = _mapper!.Map<SizeShoeListVm>(sizeShoe);
+
+                    return View(sizeShoeListVm);
+
+                }
+                catch (Exception)
+                {
+                    // Log the exception (ex) here as needed
+                    return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving the record.");
+                }
+            }
+            return View(sizeShoeListVm);
+        }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditSize(SizeShoeListVm sizeShoeListVm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(sizeShoeListVm);
+            }
+            if (_sizeShoeService == null || _mapper == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Dependencias no están configuradas correctamente");
+            }
+            try
+            {
+                SizeShoe sizeShoe = _mapper!.Map<SizeShoe>(sizeShoeListVm);
+
+                if (_sizeShoeService.Existe(sizeShoe))
+                {
+                    ModelState.AddModelError(string.Empty, "Record already exist");
+                    return View(sizeShoeListVm);
+                }
+
+                _sizeShoeService.Guardar(sizeShoe);
+                TempData["success"] = "Record successfully added/edited";
+                return RedirectToAction("Details");
+            }
+            catch (Exception)
+            {
+                // Log the exception (ex) here as needed
+                ModelState.AddModelError(string.Empty, "An error occurred while editing the record.");
+                return View(sizeShoeListVm);
+            }
+        }
     }
 }

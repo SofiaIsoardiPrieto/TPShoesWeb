@@ -209,8 +209,7 @@ namespace TPShoes.Servicios.Servicios
             try
             {
                 _unitOfWork.BeginTransaction();
-                if (sizeShoe.SizeId == 0)
-                {
+                
                     if (!_repository.Existe(sizeShoe))
                     {
                         _repository.AgregarSizeShoe(sizeShoe);
@@ -218,14 +217,10 @@ namespace TPShoes.Servicios.Servicios
                     }
                     else
                     {
-                        _repository.EditarSizeShoe(sizeShoe);
+                        _repository.Editar(sizeShoe);
                         _unitOfWork.SaveChanges();
                     }
-                }
-                else
-                {
-                    _repository.Editar(sizeShoe);
-                }
+               
                 _unitOfWork.Commit();
             }
             catch (Exception)

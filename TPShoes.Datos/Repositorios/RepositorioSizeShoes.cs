@@ -71,7 +71,7 @@ namespace TPShoes.Datos.Repositorios
         {
             return _db.SizeShoes.
                   Any(s => s.SizeId == sizeShoe.SizeId
-                  && s.SizeId != sizeShoe.SizeId);
+                  && s.ShoeId == sizeShoe.ShoeId);
         }
 
         public int GetCantidad()
