@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Drawing.Drawing2D;
 using TPShoes.Entidades.Clases;
 using TPShoes.Entidades.ViewModels.Shoe;
 using TPShoes.Entidades.ViewModels.SizeShoe;
@@ -146,7 +144,7 @@ namespace TPShoes.Web.Areas.Admin.Controllers
             if (id == null || id == 0)
             {
                 shoeEditVm = new ShoeEditVm();
-                CargarListasCombos(shoeEditVm);
+                CargarListasCombosShoe(shoeEditVm);
 
             }
             else
@@ -159,7 +157,7 @@ namespace TPShoes.Web.Areas.Admin.Controllers
                         return NotFound();
                     }
                     shoeEditVm = _mapper!.Map<ShoeEditVm>(shoe);
-                    CargarListasCombos(shoeEditVm);
+                    CargarListasCombosShoe(shoeEditVm);
 
 
                     return View(shoeEditVm);
@@ -173,14 +171,13 @@ namespace TPShoes.Web.Areas.Admin.Controllers
             }
             return View(shoeEditVm);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult UpSert(ShoeEditVm shoeEditVm)
         {
             if (!ModelState.IsValid)
             {
-                CargarListasCombos(shoeEditVm);
+                CargarListasCombosShoe(shoeEditVm);
                 return View(shoeEditVm);
             }
             try
@@ -190,7 +187,7 @@ namespace TPShoes.Web.Areas.Admin.Controllers
                 if (_shoeService!.Existe(shoe))
                 {
                     ModelState.AddModelError(string.Empty, "Record already exist");
-                    CargarListasCombos(shoeEditVm);
+                    CargarListasCombosShoe(shoeEditVm);
 
                     return View(shoeEditVm);
                 }
@@ -203,13 +200,30 @@ namespace TPShoes.Web.Areas.Admin.Controllers
             {
                 // Log the exception (ex) here as needed
                 ModelState.AddModelError(string.Empty, "An error occurred while editing the record.");
-                CargarListasCombos(shoeEditVm);
+                CargarListasCombosShoe(shoeEditVm);
 
                 return View(shoeEditVm);
             }
         }
+        private void CargarListasCombosSizeShoe(SizeShoeEditVm sizeShoeEditVm)
+        {
 
-        private void CargarListasCombos(ShoeEditVm shoeEditVm)
+            sizeShoeEditVm.Shoes = _shoeService!.GetLista(
+                                        orderBy: o => o.OrderBy(c => c.Model))
+                                    .Select(c => new SelectListItem
+                                    {
+                                        Text = c.Model,
+                                        Value = c.ShoeId.ToString()
+                                    }).ToList();
+            sizeShoeEditVm.Sizes = _sizeService!.GetLista(
+                                        orderBy: o => o.OrderBy(c => c.SizeNumber))
+                                    .Select(c => new SelectListItem
+                                    {
+                                        Text = c.SizeNumber.ToString(),
+                                        Value = c.SizeId.ToString()
+                                    }).ToList();
+        }
+        private void CargarListasCombosShoe(ShoeEditVm shoeEditVm)
         {
             shoeEditVm.Brands = _brandService!.GetLista(
                                         orderBy: o => o.OrderBy(c => c.BrandName))
@@ -241,7 +255,6 @@ namespace TPShoes.Web.Areas.Admin.Controllers
                                     }).ToList();
 
         }
-
         [HttpDelete]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int? id)
@@ -271,9 +284,6 @@ namespace TPShoes.Web.Areas.Admin.Controllers
 
             }
         }
-
-
-
         public IActionResult Details(int? id)
         {
             if (id is null || id == 0)
@@ -308,28 +318,28 @@ namespace TPShoes.Web.Areas.Admin.Controllers
             }
 
         }
-
-
-        public IActionResult EditSize(int? id)
+        public IActionResult EditSize(int ShoeId, int? SizeId)
         {
-            int sizeShoeId = id.Value;
-            SizeShoeListVm sizeShoeListVm;
-            if (id == null || id == 0)
+           
+            SizeShoeEditVm sizeShoeEditVm;
+            if (SizeId == null || SizeId == 0)
             {
-                sizeShoeListVm = new SizeShoeListVm();
+                sizeShoeEditVm = new SizeShoeEditVm();
+                CargarListasCombosSizeShoe(sizeShoeEditVm);
             }
             else
             {
                 try
                 {
-                    SizeShoe sizeShoe = _sizeShoeService.GetSizeShoePorId(sizeShoeId);
+                    int sizeId = SizeId.Value;
+                    SizeShoe sizeShoe = _sizeShoeService!.GetSizeShoePorId(ShoeId, sizeId);
                     if (sizeShoe == null)
                     {
                         return NotFound();
                     }
-                    sizeShoeListVm = _mapper!.Map<SizeShoeListVm>(sizeShoe);
-
-                    return View(sizeShoeListVm);
+                    sizeShoeEditVm = _mapper!.Map<SizeShoeEditVm>(sizeShoe);
+                    CargarListasCombosSizeShoe(sizeShoeEditVm);
+                    return View(sizeShoeEditVm);
 
                 }
                 catch (Exception)
@@ -338,18 +348,18 @@ namespace TPShoes.Web.Areas.Admin.Controllers
                     return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving the record.");
                 }
             }
-            return View(sizeShoeListVm);
+            return View(sizeShoeEditVm);
         }
-
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EditSize(SizeShoeListVm sizeShoeListVm)
+        public IActionResult EditSize(SizeShoeEditVm sizeShoeEditVm)
         {
+            ModelState.Remove("Sizes");
+            ModelState.Remove("Shoes");
             if (!ModelState.IsValid)
             {
-                return View(sizeShoeListVm);
+                CargarListasCombosSizeShoe(sizeShoeEditVm);
+                return View(sizeShoeEditVm);
             }
             if (_sizeShoeService == null || _mapper == null)
             {
@@ -357,23 +367,25 @@ namespace TPShoes.Web.Areas.Admin.Controllers
             }
             try
             {
-                SizeShoe sizeShoe = _mapper!.Map<SizeShoe>(sizeShoeListVm);
+                SizeShoe sizeShoe = _mapper!.Map<SizeShoe>(sizeShoeEditVm);
 
-                if (_sizeShoeService.Existe(sizeShoe))
-                {
-                    ModelState.AddModelError(string.Empty, "Record already exist");
-                    return View(sizeShoeListVm);
-                }
+                //if (_sizeShoeService.Existe(sizeShoe))
+                //{
+                   
+                //    ModelState.AddModelError(string.Empty, "Record already exist");
+                //    CargarListasCombosSizeShoe(sizeShoeEditVm);
+                //    return View(sizeShoeEditVm);
+               // }
 
                 _sizeShoeService.Guardar(sizeShoe);
                 TempData["success"] = "Record successfully added/edited";
-                return RedirectToAction("Details");
+                return RedirectToAction("Index");
             }
             catch (Exception)
             {
                 // Log the exception (ex) here as needed
                 ModelState.AddModelError(string.Empty, "An error occurred while editing the record.");
-                return View(sizeShoeListVm);
+                return View(sizeShoeEditVm);
             }
         }
     }

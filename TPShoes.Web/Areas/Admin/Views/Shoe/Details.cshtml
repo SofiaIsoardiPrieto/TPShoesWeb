@@ -6,6 +6,8 @@
 }
 <div class="container">
     @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="@Model.ElementAt(0).SizeShoeId" />
+    <input type="hidden" asp-for="@Model.ElementAt(0).ShoeId" />
     <div class="row mb-3">
         <div class="col-6">
             <h3>Size List de: @Model.ElementAt(0).ShoeId</h3>
@@ -17,7 +19,7 @@
             </a>
         </div>
           <div class="col-6 text-end">
-            <a asp-area="Admin" asp-controller="Shoe" asp-action="EditSize" class="btn btn-primary">
+            <a class="btn btn-primary" asp-area="Admin" asp-controller="Shoe" asp-action="EditSize" asp-route-ShoeId="@Model.ElementAt(0).ShoeId">
                 <i class="bi bi-plus-circle"></i>
                 Nuevo
             </a>
@@ -44,7 +46,7 @@
                         <td>@item.Stock</td>
                         <td>
                             <div class="d-flex gap-2">
-                                <a class="btn btn-warning" asp-area="Admin" asp-controller="Shoe" asp-action="EditSize" asp-route-id="@item.SizeShoeId">
+                                <a class="btn btn-warning" asp-area="Admin" asp-controller="Shoe" asp-action="EditSize" asp-route-ShoeId="@item.ShoeId" asp-route-SizeId="@item.SizeId">
                                     <i class="bi bi-pencil-square"></i>&nbsp; Edit
                                 </a>
                             </div>

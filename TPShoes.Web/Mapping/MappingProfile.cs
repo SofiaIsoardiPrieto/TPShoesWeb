@@ -26,7 +26,8 @@ namespace TPShoes.Web.Mapping
 
         private void LoadSizeShoeMapping()
         {
-            CreateMap<SizeShoe, SizeShoeListVm>().ReverseMap(); 
+            CreateMap<SizeShoe, SizeShoeListVm>().ReverseMap();
+            CreateMap<SizeShoe, SizeShoeEditVm>().ReverseMap();
         }
 
         private void LoadSizeMapping()

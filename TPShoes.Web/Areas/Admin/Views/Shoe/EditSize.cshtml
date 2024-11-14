@@ -1,4 +1,4 @@
-﻿@model SizeShoeListVm
+﻿@model SizeShoeEditVm
 @{
     ViewData["Title"] = "Edit SizeShoe";
    
@@ -6,10 +6,25 @@
 <form method="post" asp-action="EditSize" asp-comtroller="Shoe"  class="w-75">
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="SizeShoeId" />
-      <input type="hidden" asp-for="SizeId" />
+    <input type="hidden" asp-for="SizeId" />
     <input type="hidden" asp-for="ShoeId" />
     <div class="border p-3 bg-white">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>     
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row">
+            <h2 class="text-info pl-3">@(Model.SizeShoeId == 0 ? "Add Size" : "Edit Size")</h2>
+
+        </div>   
+         @if (Model.SizeShoeId == 0)
+        {
+            <div class="form-group row py-2">
+                <label asp-for="SizeId"></label>
+                <select asp-for="SizeId" class="form-select" asp-items="Model.Sizes">
+                    <option selected disabled>Select Size</option>
+                </select>
+                <span asp-validation-for="SizeId" class="text-danger"></span>
+
+            </div>
+        }
         <div class="form-group col-3 py-2">
             <label asp-for="Stock"></label>
             <input asp-for="Stock" class="form-control" type="number" />
@@ -30,7 +45,7 @@
             </button>
 
         }
-        <a asp-action="Details" class="btn btn-success btn-block">
+        <a asp-area="Admin" asp-controller="Shoe" asp-action="Details"  asp-route-id="@Model.ShoeId"  class="btn btn-success btn-block">
             <i class="bi bi-backspace"></i>
             Back to List
         </a>
