@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace TPShoes.Entidades.ViewModels.SizeShoe
 {
     public class SizeShoeEditVm
     {
         public int SizeShoeId { get; set; }
+
+        [DisplayName("Shoe")]
         public int ShoeId { get; set; }
+
+        [DisplayName("Size")]
         public int SizeId { get; set; }
         public int Stock { get; set; }
 

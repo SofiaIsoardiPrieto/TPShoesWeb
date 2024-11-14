@@ -5,8 +5,7 @@
 }
 <form method="post" asp-action="EditSize" asp-comtroller="Shoe"  class="w-75">
     @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="SizeShoeId" />
-    <input type="hidden" asp-for="SizeId" />
+    <input type="hidden" asp-for="SizeShoeId"/>  
     <input type="hidden" asp-for="ShoeId" />
     <div class="border p-3 bg-white">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -30,6 +29,7 @@
             <input asp-for="Stock" class="form-control" type="number" />
             <span asp-validation-for="Stock" class="text-danger"></span>
         </div>
+           
         @if (Model.SizeShoeId == 0)
         {
             <button type="submit" class="btn btn-primary">
@@ -45,7 +45,7 @@
             </button>
 
         }
-        <a asp-area="Admin" asp-controller="Shoe" asp-action="Details"  asp-route-id="@Model.ShoeId"  class="btn btn-success btn-block">
+        <a asp-area="Admin" asp-controller="Shoe" asp-action="Index" class="btn btn-success btn-block">
             <i class="bi bi-backspace"></i>
             Back to List
         </a>
