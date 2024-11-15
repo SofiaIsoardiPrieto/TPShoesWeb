@@ -7,12 +7,14 @@
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="SizeShoeId"/>  
     <input type="hidden" asp-for="ShoeId" />
+    @* <input type="hidden" asp-for="SizeId" /> *@
     <div class="border p-3 bg-white">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group row">
             <h2 class="text-info pl-3">@(Model.SizeShoeId == 0 ? "Add Size" : "Edit Size")</h2>
 
         </div>   
+        
          @if (Model.SizeShoeId == 0)
         {
             <div class="form-group row py-2">
@@ -23,6 +25,18 @@
                 <span asp-validation-for="SizeId" class="text-danger"></span>
 
             </div>
+        }else{
+            <label>Size</label>
+            <input type="text" asp-for="SizeId" />
+            <div class="form-group row py-2">
+                <label asp-for="@Model.SizeId"></label>
+                <select asp-for="@Model.SizeId" disabled class="form-select" asp-items="Model.Sizes">
+                    
+                </select>
+                <span asp-validation-for="@Model.SizeId" class="text-danger"></span>
+
+            </div>
+
         }
         <div class="form-group col-3 py-2">
             <label asp-for="Stock"></label>

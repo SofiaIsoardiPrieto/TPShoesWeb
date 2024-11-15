@@ -354,8 +354,8 @@ namespace TPShoes.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult EditSize(SizeShoeEditVm sizeShoeEditVm)
         {
-            ModelState.Remove("Sizes");
-            ModelState.Remove("Shoes");
+            //ModelState.Remove("Sizes");
+            //ModelState.Remove("Shoes");
             if (!ModelState.IsValid)
             {
                 CargarListasCombosSizeShoe(sizeShoeEditVm);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 
 namespace TPShoes.Entidades.ViewModels.SizeShoe
@@ -13,9 +14,10 @@ namespace TPShoes.Entidades.ViewModels.SizeShoe
         [DisplayName("Size")]
         public int SizeId { get; set; }
         public int Stock { get; set; }
-
-        public List<SelectListItem> Shoes { get; set; } = null!;
-        public List<SelectListItem> Sizes { get; set; } = null!;
+        [ ValidateNever ]
+        public List<SelectListItem> Shoes { get; set; } = new List<SelectListItem>();
+        [ValidateNever]
+        public List<SelectListItem> Sizes { get; set; } = new List<SelectListItem>();
 
     }
 }
