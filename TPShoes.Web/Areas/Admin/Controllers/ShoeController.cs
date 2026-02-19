@@ -23,7 +23,7 @@ namespace TPShoes.Web.Areas.Admin.Controllers
         private readonly IMapper? _mapper;
 
         private int pageSize = 10;
-
+   
         public ShoeController(IShoesServicio? shoeService, ISizeShoesServicio? sizeShoeService,
             IBrandsServicio brandService,
             IColoursServicio colourService,

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TPShoes.Datos;
 using TPShoes.Datos.Interfaces;
@@ -10,7 +11,7 @@ namespace TPShoes.IoC
 {
     public static class DI
     {
-        public static void ConfigurarServicios(IServiceCollection servicios)
+        public static void ConfigurarServicios(IServiceCollection servicios, IConfiguration configuration)
         {
          
             //todos los repositorios
@@ -50,8 +51,7 @@ namespace TPShoes.IoC
 
             servicios.AddDbContext<DBContextShoes>(optiones =>
             {
-                optiones.UseSqlServer(@"Data Source=.; Initial Catalog=TPShoes;
-                    Trusted_Connection=true; TrustServerCertificate=True;");
+                optiones.UseSqlServer(configuration.GetConnectionString("MyConn")); // La cadena de conexion queda en appsettings.json
             });
 
             

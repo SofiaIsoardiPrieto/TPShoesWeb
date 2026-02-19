@@ -11,7 +11,7 @@ namespace TPShoes.Web
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            DI.ConfigurarServicios(builder.Services);
+            DI.ConfigurarServicios(builder.Services,builder.Configuration);
 			builder.Services.AddAutoMapper(typeof(Program).Assembly);
 			var app = builder.Build();
 			// Configure the HTTP request pipeline.
