@@ -10,11 +10,15 @@
     @Html.AntiForgeryToken()
     <div class="row mb-3">
         <div class="col-6">
-            <h3>Size List de: @Model.ElementAt(0).Brand</h3>
+            <h3>Shoe List de: @Model.ElementAt(0).Brand</h3>
         </div>      
         <div class="col-6 text-end">
-            <a asp-area="Admin" asp-controller="Brand" asp-action="Index" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i>
+           @*  <a class="btn btn-warning btn-sm" asp-controller="Categories" asp-action="UpSert" asp-route-id="@Model.ElementAt(0).ShoeId">
+                <i class="bi bi-pencil-square"></i>&nbsp;
+                Editar
+            </a> *@
+            <a asp-action="Index" class="btn btn-success btn-sm">
+                <i class="bi bi-backspace"></i>&nbsp;
                 Volver
             </a>
         </div>

@@ -66,17 +66,21 @@ namespace TPShoes.Web.Mapping
                  .ForMember(dest => dest.Sport, opt => opt.MapFrom(src => src.Sport.SportName));
             CreateMap<Shoe, ShoeEditVm>().ReverseMap();
             CreateMap<Shoe, ShoeHomeIndexVm>()
-                .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Brand.BrandName))
-                .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre.GenreName))
-                .ForMember(dest => dest.Colour, opt => opt.MapFrom(src => src.Colour.ColourName))
-                .ForMember(dest => dest.Sport, opt => opt.MapFrom(src => src.Sport.SportName))
-                .ForMember(dest => dest.FinalPrice, opt => opt.MapFrom(src => src.Price * 1.21m));
+      .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Brand.BrandName))
+      .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre.GenreName))
+      .ForMember(dest => dest.Colour, opt => opt.MapFrom(src => src.Colour.ColourName))
+      .ForMember(dest => dest.Sport, opt => opt.MapFrom(src => src.Sport.SportName))
+      .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.Brand.ImageUrl)) 
+      .ForMember(dest => dest.FinalPrice, opt => opt.MapFrom(src => src.Price * 1.21m));
+
             CreateMap<Shoe, ShoeHomeDetailsVm>()
-              .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Brand.BrandName))
-              .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre.GenreName))
-              .ForMember(dest => dest.Colour, opt => opt.MapFrom(src => src.Colour.ColourName))
-              .ForMember(dest => dest.Sport, opt => opt.MapFrom(src => src.Sport.SportName))
-              .ForMember(dest => dest.FinalPrice, opt => opt.MapFrom(src => src.Price * 1.21m));
+     .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Brand.BrandName))
+     .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre.GenreName))
+     .ForMember(dest => dest.Colour, opt => opt.MapFrom(src => src.Colour.ColourName))
+     .ForMember(dest => dest.Sport, opt => opt.MapFrom(src => src.Sport.SportName))
+     .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.Brand.ImageUrl)) 
+     .ForMember(dest => dest.FinalPrice, opt => opt.MapFrom(src => src.Price * 1.21m));
+
 
         }
     }
