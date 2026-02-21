@@ -1,5 +1,4 @@
-﻿
-namespace TPShoes.Entidades.ViewModels.SizeShoe
+﻿namespace TPShoes.Entidades.ViewModels.SizeShoe
 {
     public class SizeShoeListVm
     {
@@ -7,8 +6,6 @@ namespace TPShoes.Entidades.ViewModels.SizeShoe
         public int ShoeId { get; set; }
         public int SizeId { get; set; }
         public int Stock { get; set; }
-       
-       
-
+        public decimal SizeNumber { get; set; } 
     }
 }

@@ -1,58 +1,71 @@
 ﻿﻿
-@model IEnumerable<SizeListVm>
-@using X.PagedList
-@using X.PagedList.Mvc.Core
+@model ShoeHomeDetailsVm
 @{
-    ViewData["Title"] = "Size List";
+    ViewData["Title"] = "Home Page";
 }
-<div class="container">
-    @Html.AntiForgeryToken()
-    <div class="row mb-3">
-        <div class="col-6">
-            <h3>Size List </h3>
+
+
+@if (Model.Sizes.Count == 0 || Model is null)
+{
+ 
+@*     <div class="container d-flex justify-content-center align-items-start" style="min-height: 100vh; margin-top: 25vh;">
+        <div class="card m-3 shadow-lg rounded" style="max-width: 1000px; background-color:#f8f9fa; color:#343a40;">
+            <div class="row g-0 justify-content-center">
+                <div class="col-md-8 d-flex justify-content-center align-items-center" style="background-color:#f8f9fa;">
+                    <div class="card-body text-center" style="background-color:#f8f9fa;">
+                        <h5 class="card-title fw-bold fs-4 text-danger">Oops! This shoe doesn't have a size associated.</h5>
+                        <p class="fs-5 text-muted mb-4">Please go back to the menu and select another option.</p>
+                        <a href="@(ViewBag.ReturnUrl ?? Url.Action("Index", "Home", new { area = "Customer" }))" class="btn btn-info btn-lg px-4 fw-bold">
+                            <i class="bi bi-arrow-left-circle me-2"></i> Go back to Homepage
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-6 text-end">
-            <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i>
-                Volver
-            </a>
+    </div> *@
+}
+else
+{
+    <div class="d-flex justify-content-center">
+
+        <div class="card" style="width: 40%; text-align:center">
+            <img src="@Model.ImageUrl" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">@Model.Model</h5>
+                <p class="card-text">@Model.Description</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Marca:@Model.Brand</li>
+                <li class="list-group-item">Precio: @Model.Price - Precio Efectivo: @Model.FinalPrice</li>
+
+            </ul>
+            <div class="card-body">
+                @if (Model.Active)
+                {
+                    @foreach (var item in Model.Sizes)
+                    {
+                        if (item != null)
+                        {
+                            if (item.Stock != 0)
+                            {
+                              // <a asp-controller="Home" asp-action="AgregarAlCarrito" asp-route-id="@item.ShoeId" asp-route-sizeid="@item.SizeId"  class="btn btn-dark">@item.SizeNumber</a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Home" class="btn btn-dark disabled">@item.SizeNumber</a>
+                            }
+                        }
+                    }
+
+                }
+                else
+                {
+                    <div class="col-6 mb-3">
+                        <span class="badge bg-danger text-white fw-bold fs-5 ">Suspended</span>
+                    </div>
+                }
+                <a asp-controller="Home" asp-action="Index"  class="btn btn-info">BACK</a>
+            </div>
         </div>
     </div>
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-
-                <th>Numero</th>
-              
-
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.Any())
-            {
-                foreach (var item in Model)
-                {
-                    <tr id="@item.SizeId">
-
-                        <td>@item.SizeNumber</td>
-                       
-                    </tr>
-                }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="8" class="text-center">No Shoes added yet!</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    @*    <partial name="_Pager" model="@Model" /> *@
-
-
-</div>
-@section Scripts {
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <script src="~/js/common.js"></script>
 }

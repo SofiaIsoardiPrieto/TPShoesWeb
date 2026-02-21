@@ -41,16 +41,22 @@ namespace TPShoes.Web.Areas.Customer.Controllers
         public IActionResult Details(int? id)
         {
             if (id == null || id.Value == 0) { return NotFound(); }
-            int idShoe = id.Value;
-            List<Size> TallesList = _serviciosSizeShoe!.GetSizesPorId(idShoe, true);
-            if (TallesList is null || !TallesList.Any())
+           // int idShoe = id.Value;
+            Shoe? shoe = _serviciosShoe!.GetShoePorId(filter: c => c.ShoeId == id, propertiesNames: "Sport,Brand,Colour,Genre");
+            if (shoe is null)
+            {
+                return NotFound();
+            }
+            var shoeHomeDetailsVm = _mapper!.Map<ShoeHomeDetailsVm>(shoe);
+          //  List<Size> TallesList = _serviciosSizeShoe!.GetSizesPorId(shoeHomeDetailsVm.ShoeId, true);
+            if (shoeHomeDetailsVm is null || !shoeHomeDetailsVm.Sizes.Any())
             {
 
                 return NotFound();
 
             }
-            var sizeListVm = _mapper!.Map<List<SizeListVm>>(TallesList);
-            return View(sizeListVm);
+            //var sizeListVm = _mapper!.Map<List<SizeListVm>>(TallesList);
+            return View(shoeHomeDetailsVm);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
+using TPShoes.Entidades.ViewModels.Size;
+using TPShoes.Entidades.ViewModels.SizeShoe;
 
 namespace TPShoes.Entidades.ViewModels.Shoe
 {
@@ -10,7 +12,7 @@ namespace TPShoes.Entidades.ViewModels.Shoe
         public string Genre { get; set; } = null!;
         public string Colour { get; set; } = null!;
         public string Sport { get; set; } = null!;
-        public List<SelectListItem> Sizes { get; set; } = null!;
+        public List<SizeShoeListVm> Sizes { get; set; } = null!;
         public string? ImageUrl { get; set; }
         public bool Active { get; set; }
 
