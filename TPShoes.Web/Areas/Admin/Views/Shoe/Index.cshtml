@@ -120,7 +120,7 @@
                                 <a class="btn btn-warning" asp-controller="Shoe" asp-action="UpSert" asp-route-id="@item.ShoeId">
                                     <i class="bi bi-pencil-square"></i>&nbsp; Edit
                                 </a>
-                                <a onclick="Delete('/Shoe/Delete/@item.ShoeId',@item.ShoeId,'@item.Model')" class="btn btn-danger">
+                                <a onclick="Delete('/Shoe/Delete/@item.ShoeId',@item.ShoeId,'@item.Model.Replace("'", " \\'")')" class="btn btn-danger">
                                     <i class="bi bi-trash-fill"></i> Delete
                                 </a>
                                 <a class="btn btn-info" asp-controller="Shoe" asp-action="Details" asp-route-id="@item.ShoeId" style="background-color:aqua">

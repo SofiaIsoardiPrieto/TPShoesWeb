@@ -20,6 +20,7 @@ namespace TPShoes.Datos
         {
             optionsBuilder.UseSqlServer(@"Data Source=.; Initial Catalog=TPShoes;
                     Trusted_Connection=true; TrustServerCertificate=True;");
+            //optiones.UseSqlServer(configuration.GetConnectionString("MyConn")); // La cadena de conexion queda en appsettings.json
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

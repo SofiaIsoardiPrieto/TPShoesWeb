@@ -199,7 +199,7 @@ namespace TPShoes.Web.Areas.Admin.Controllers
             catch (Exception)
             {
                 // Log the exception (ex) here as needed
-                ModelState.AddModelError(string.Empty, "An error occurred while editing the record.");
+                ModelState.AddModelError(string.Empty, "An error occurred while adding/editing the record.");
                 CargarListasCombosShoe(shoeEditVm);
 
                 return View(shoeEditVm);

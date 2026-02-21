@@ -84,7 +84,7 @@
                                 <i class="bi bi-pencil-square"></i>&nbsp;
                                 Edit
                             </a>
-                            <a onclick="Delete('/Brand/Delete/@item.BrandId',@item.BrandId,'@item.BrandName')" class="btn btn-danger">
+                            <a onclick="Delete('/Brand/Delete/@item.BrandId',@item.BrandId,'@item.BrandName.Replace("'", " \\'")')" class="btn btn-danger">
                                 <i class="bi bi-trash-fill"></i>
                                 Delete
                             </a>
